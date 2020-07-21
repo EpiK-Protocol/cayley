@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 // Sort iterator orders values from it's subiterator.

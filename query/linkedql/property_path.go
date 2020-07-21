@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/query/path"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/query/path"
 )
 
 // PropertyPathI is an interface to be used where a path of properties is expected.

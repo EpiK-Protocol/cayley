@@ -18,8 +18,8 @@ import (
 	"context"
 	"sort"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 // Perhaps the most tricky file in this entire module. Really a method on the

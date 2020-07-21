@@ -7,9 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/internal"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/internal"
 )
 
 func newLazyReader(open func() (quad.ReadCloser, error)) quad.ReadCloser {

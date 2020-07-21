@@ -18,9 +18,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/query"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/query"
 )
 
 const Name = "mql"

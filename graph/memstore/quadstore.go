@@ -20,10 +20,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/graph/refs"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 const QuadStoreType = "memstore"
@@ -88,6 +88,40 @@ func (qdi QuadDirectionIndex) Get(d quad.Direction, id int64) (*Tree, bool) {
 	return tree, ok
 }
 
+type QuadIdSet map[int64]interface{}
+type CidQuadIndex struct {
+	index map[string]QuadIdSet
+}
+
+func NewCidQuadIndex() CidQuadIndex {
+	return CidQuadIndex{map[string]QuadIdSet{}}
+}
+
+func (cqi CidQuadIndex) Add(cid string, id int64) {
+	if len(cid) == 0 || id == 0 {
+		//
+		return
+	}
+	set, ok := cqi.index[cid]
+	if !ok {
+		set = make(QuadIdSet)
+		cqi.index[cid] = set
+	}
+	set[id] = nil
+}
+
+func (cqi CidQuadIndex) Delete(cid string, id int64) {
+	set, ok := cqi.index[cid]
+	if !ok {
+		// TODO: error when not found?
+		return
+	}
+	delete(set, id)
+	if len(set) == 0 {
+		delete(cqi.index, cid)
+	}
+}
+
 type Primitive struct {
 	ID    int64
 	Quad  internalQuad
@@ -141,6 +175,7 @@ type QuadStore struct {
 	all     []*Primitive // might not be sorted by id
 	reading bool         // someone else might be reading "all" slice - next insert/delete should clone it
 	index   QuadDirectionIndex
+	cqIndex CidQuadIndex
 	horizon int64 // used only to assign ids to tx
 	// vip_index map[string]map[int64]map[string]map[int64]*b.Tree
 }
@@ -156,10 +191,11 @@ func New(quads ...quad.Quad) *QuadStore {
 
 func newQuadStore() *QuadStore {
 	return &QuadStore{
-		vals:  make(map[string]int64),
-		quads: make(map[internalQuad]int64),
-		prim:  make(map[int64]*Primitive),
-		index: NewQuadDirectionIndex(),
+		vals:    make(map[string]int64),
+		quads:   make(map[internalQuad]int64),
+		prim:    make(map[int64]*Primitive),
+		index:   NewQuadDirectionIndex(),
+		cqIndex: NewCidQuadIndex(),
 	}
 }
 
@@ -428,10 +464,14 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 	for _, d := range deltas {
 		switch d.Action {
 		case graph.Add:
-			qs.AddQuad(d.Quad)
+			id, succ := qs.AddQuad(d.Quad)
+			if succ {
+				qs.cqIndex.Add(d.Cid, id)
+			}
 		case graph.Delete:
 			if id, _, ok := qs.findQuad(d.Quad); ok {
 				qs.Delete(id)
+				qs.cqIndex.Delete(d.Cid, id)
 			}
 		default:
 			// TODO: ideally we should rollback it

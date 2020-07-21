@@ -24,7 +24,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 var _ Shape = &Fixed{}

@@ -19,10 +19,10 @@ import (
 
 	"github.com/badgerodon/peg"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/query/shape"
 )
 
 func BuildIteratorTreeForQuery(ctx context.Context, qs graph.QuadStore, query string) iterator.Shape {

@@ -26,8 +26,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/cayleygraph/cayley/graph/iterator"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph/iterator"
 )
 
 type Procedure int8
@@ -50,6 +50,7 @@ const (
 )
 
 type Delta struct {
+	Cid    string
 	Quad   quad.Quad
 	Action Procedure
 }
@@ -66,6 +67,7 @@ func Unwrap(qs QuadStore) QuadStore {
 type Handle struct {
 	QuadStore
 	QuadWriter
+	Syncer
 }
 
 type IgnoreOpts struct {
@@ -74,6 +76,7 @@ type IgnoreOpts struct {
 
 func (h *Handle) Close() error {
 	err := h.QuadWriter.Close()
+	h.Syncer.Stop()
 	h.QuadStore.Close()
 	return err
 }

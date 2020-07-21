@@ -3,7 +3,7 @@ package iterator
 import (
 	"context"
 
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 // Not iterator acts like a complement for the primary iterator.

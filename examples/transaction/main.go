@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cayleygraph/cayley"
 	"github.com/cayleygraph/quad"
+	cayley "github.com/epik-protocol/gateway"
 )
 
 func main() {

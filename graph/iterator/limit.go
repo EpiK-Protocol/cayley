@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 // Limit iterator will stop iterating if certain a number of values were encountered.

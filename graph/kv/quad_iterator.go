@@ -20,10 +20,10 @@ import (
 
 	"github.com/hidal-go/hidalgo/kv"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/graph/proto"
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/graph/proto"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 type QuadIterator struct {

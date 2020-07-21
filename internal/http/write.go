@@ -25,11 +25,11 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/internal/decompressor"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/nquads"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/internal/decompressor"
 )
 
 func ParseJSONToQuadList(jsonBody []byte) (out []quad.Quad, _ error) {

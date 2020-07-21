@@ -20,11 +20,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/graph/refs"
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/gateway/query/shape"
 )
 
 var _ shape.Optimizer = (*QuadStore)(nil)

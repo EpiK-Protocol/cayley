@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
 )
 
 func writerQuadsTo(path string, typ string, qr quad.Reader) error {

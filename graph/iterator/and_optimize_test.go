@@ -21,7 +21,7 @@ import (
 	"context"
 	"testing"
 
-	. "github.com/cayleygraph/cayley/graph/iterator"
+	. "github.com/epik-protocol/gateway/graph/iterator"
 	"github.com/stretchr/testify/require"
 )
 

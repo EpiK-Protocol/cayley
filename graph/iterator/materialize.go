@@ -19,8 +19,8 @@ package iterator
 import (
 	"context"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph/refs"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 const MaterializeLimit = 1000

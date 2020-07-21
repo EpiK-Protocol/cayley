@@ -18,9 +18,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/kv"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/kv"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/hidal-go/hidalgo/kv/bolt"
 )

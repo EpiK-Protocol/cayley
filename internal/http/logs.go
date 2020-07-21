@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cayleygraph/cayley/clog"
+	"github.com/epik-protocol/gateway/clog"
 )
 
 // statusWriter wraps http.ResponseWriter and captures the written status code

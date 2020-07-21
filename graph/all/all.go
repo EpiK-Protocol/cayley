@@ -2,10 +2,10 @@ package all
 
 import (
 	// supported backends
-	_ "github.com/cayleygraph/cayley/graph/kv/all"
-	_ "github.com/cayleygraph/cayley/graph/memstore"
-	_ "github.com/cayleygraph/cayley/graph/nosql/all"
-	_ "github.com/cayleygraph/cayley/graph/sql/cockroach"
-	_ "github.com/cayleygraph/cayley/graph/sql/mysql"
-	_ "github.com/cayleygraph/cayley/graph/sql/postgres"
+	_ "github.com/epik-protocol/gateway/graph/kv/all"
+	_ "github.com/epik-protocol/gateway/graph/memstore"
+	_ "github.com/epik-protocol/gateway/graph/nosql/all"
+	_ "github.com/epik-protocol/gateway/graph/sql/cockroach"
+	_ "github.com/epik-protocol/gateway/graph/sql/mysql"
+	_ "github.com/epik-protocol/gateway/graph/sql/postgres"
 )

@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph/refs"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph/refs"
 	"github.com/stretchr/testify/require"
 )
 

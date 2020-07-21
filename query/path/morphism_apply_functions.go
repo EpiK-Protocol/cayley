@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/query/shape"
 )
 
 // join puts two iterators together by intersecting their result sets with an AND

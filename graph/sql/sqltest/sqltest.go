@@ -4,11 +4,11 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/graphtest"
-	"github.com/cayleygraph/cayley/graph/graphtest/testutil"
-	"github.com/cayleygraph/cayley/graph/sql"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/graphtest"
+	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	"github.com/epik-protocol/gateway/graph/sql"
 	"github.com/stretchr/testify/require"
 )
 

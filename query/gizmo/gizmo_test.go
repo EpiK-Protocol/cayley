@@ -21,12 +21,12 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/graphtest/testutil"
-	_ "github.com/cayleygraph/cayley/graph/memstore"
-	"github.com/cayleygraph/cayley/query"
-	_ "github.com/cayleygraph/cayley/writer"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	_ "github.com/epik-protocol/gateway/graph/memstore"
+	"github.com/epik-protocol/gateway/query"
+	_ "github.com/epik-protocol/gateway/writer"
 
 	// register global namespace for tests
 	_ "github.com/cayleygraph/quad/voc/rdf"

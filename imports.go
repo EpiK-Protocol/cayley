@@ -1,12 +1,12 @@
 package cayley
 
 import (
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	_ "github.com/cayleygraph/cayley/graph/memstore"
-	"github.com/cayleygraph/cayley/query/path"
-	_ "github.com/cayleygraph/cayley/writer"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	_ "github.com/epik-protocol/gateway/graph/memstore"
+	"github.com/epik-protocol/gateway/query/path"
+	_ "github.com/epik-protocol/gateway/writer"
 )
 
 var (

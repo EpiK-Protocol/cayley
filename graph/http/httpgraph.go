@@ -3,7 +3,7 @@ package httpgraph
 import (
 	"net/http"
 
-	"github.com/cayleygraph/cayley/graph"
+	"github.com/epik-protocol/gateway/graph"
 )
 
 type QuadStore interface {

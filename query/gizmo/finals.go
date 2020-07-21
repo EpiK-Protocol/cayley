@@ -17,8 +17,8 @@ package gizmo
 import (
 	"github.com/dop251/goja"
 
-	"github.com/cayleygraph/cayley/graph/iterator"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph/iterator"
 )
 
 const TopResultTag = "id"

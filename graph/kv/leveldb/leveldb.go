@@ -17,7 +17,7 @@ package leveldb
 import (
 	"os"
 
-	"github.com/cayleygraph/cayley/graph"
+	"github.com/epik-protocol/gateway/graph"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/hidal-go/hidalgo/kv/flat"
 	"github.com/hidal-go/hidalgo/kv/flat/leveldb"

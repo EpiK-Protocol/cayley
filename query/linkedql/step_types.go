@@ -1,10 +1,10 @@
 package linkedql
 
 import (
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/query"
-	"github.com/cayleygraph/cayley/query/path"
 	"github.com/cayleygraph/quad/voc"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/query"
+	"github.com/epik-protocol/gateway/query/path"
 )
 
 // Step is a logical part in the query

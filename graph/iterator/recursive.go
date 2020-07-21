@@ -4,8 +4,8 @@ import (
 	"context"
 	"math"
 
-	"github.com/cayleygraph/cayley/graph/refs"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph/refs"
 )
 
 const recursiveBaseTag = "__base_recursive"

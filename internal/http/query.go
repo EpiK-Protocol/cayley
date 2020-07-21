@@ -26,7 +26,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/cayleygraph/cayley/query"
+	"github.com/epik-protocol/gateway/query"
 )
 
 type SuccessQueryWrapper struct {

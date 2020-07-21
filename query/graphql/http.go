@@ -7,8 +7,8 @@ import (
 
 	"github.com/dennwc/graphql/gqlerrors"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/query"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/query"
 )
 
 type httpResult struct {

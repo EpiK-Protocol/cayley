@@ -5,4 +5,4 @@
 // and any other packr generated files.
 package http
 
-import _ "github.com/cayleygraph/cayley/packrd"
+import _ "github.com/epik-protocol/gateway/packrd"

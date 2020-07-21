@@ -3,11 +3,11 @@ package steps
 import (
 	"fmt"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/query/linkedql"
-	"github.com/cayleygraph/cayley/query/path"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/query/linkedql"
+	"github.com/epik-protocol/gateway/query/path"
 )
 
 func init() {

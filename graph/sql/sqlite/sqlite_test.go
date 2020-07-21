@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/sql/sqltest"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/sql/sqltest"
 )
 
 func makeSqlite(t testing.TB) (string, graph.Options, func()) {

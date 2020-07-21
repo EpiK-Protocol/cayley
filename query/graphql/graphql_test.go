@@ -10,10 +10,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cayleygraph/cayley/graph/graphtest/testutil"
-	"github.com/cayleygraph/cayley/graph/memstore"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc/rdf"
+	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	"github.com/epik-protocol/gateway/graph/memstore"
 )
 
 func iris(arr ...string) (out []quad.Value) {

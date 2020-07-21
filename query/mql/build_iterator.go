@@ -21,8 +21,8 @@ import (
 	"math"
 	"strings"
 
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/query/shape"
 )
 
 func buildFixed(s string) shape.Shape {

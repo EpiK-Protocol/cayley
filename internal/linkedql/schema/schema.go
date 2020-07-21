@@ -5,14 +5,14 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/cayleygraph/cayley/query/linkedql"
+	"github.com/epik-protocol/gateway/query/linkedql"
 	// Steps are imported here so they be registered and documented in the schema
-	_ "github.com/cayleygraph/cayley/query/linkedql/steps"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc/owl"
 	"github.com/cayleygraph/quad/voc/rdf"
 	"github.com/cayleygraph/quad/voc/rdfs"
 	"github.com/cayleygraph/quad/voc/xsd"
+	_ "github.com/epik-protocol/gateway/query/linkedql/steps"
 )
 
 // rdfgGraph is the W3C type for named graphs

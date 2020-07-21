@@ -18,13 +18,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
 
-	"github.com/cayleygraph/cayley/graph/graphtest/testutil"
-	_ "github.com/cayleygraph/cayley/graph/memstore"
-	sh "github.com/cayleygraph/cayley/query/shape"
-	_ "github.com/cayleygraph/cayley/writer"
+	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	_ "github.com/epik-protocol/gateway/graph/memstore"
+	sh "github.com/epik-protocol/gateway/query/shape"
+	_ "github.com/epik-protocol/gateway/writer"
 	"github.com/stretchr/testify/require"
 )
 

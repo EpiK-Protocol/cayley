@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/graphtest"
-	gnosql "github.com/cayleygraph/cayley/graph/nosql"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/graphtest"
+	gnosql "github.com/epik-protocol/gateway/graph/nosql"
 	"github.com/hidal-go/hidalgo/legacy/nosql"
 	"github.com/hidal-go/hidalgo/legacy/nosql/nosqltest"
 )

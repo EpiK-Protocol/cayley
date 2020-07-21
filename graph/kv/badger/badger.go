@@ -17,8 +17,8 @@ package badger
 import (
 	"os"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/kv"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/kv"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/hidal-go/hidalgo/kv/flat"
 	"github.com/hidal-go/hidalgo/kv/flat/badger"

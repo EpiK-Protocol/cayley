@@ -1,4 +1,4 @@
-module github.com/cayleygraph/cayley
+module github.com/epik-protocol/gateway
 
 go 1.12
 
@@ -26,6 +26,7 @@ require (
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/hidal-go/hidalgo v0.0.0-20190814174001-42e03f3b5eaa
+	github.com/ipfs/go-cid v0.0.5
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.3.0+incompatible
 	github.com/julienschmidt/httprouter v1.2.0

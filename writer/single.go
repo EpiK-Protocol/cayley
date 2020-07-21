@@ -15,7 +15,7 @@
 package writer
 
 import (
-	"github.com/cayleygraph/cayley/graph"
+	"github.com/epik-protocol/gateway/graph"
 	"github.com/cayleygraph/quad"
 )
 

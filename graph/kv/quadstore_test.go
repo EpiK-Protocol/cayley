@@ -13,12 +13,12 @@ import (
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/kv"
-	"github.com/cayleygraph/cayley/graph/kv/btree"
-	"github.com/cayleygraph/cayley/graph/refs"
-	"github.com/cayleygraph/cayley/writer"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/kv"
+	"github.com/epik-protocol/gateway/graph/kv/btree"
+	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/gateway/writer"
 )
 
 func hex(s string) []byte {

@@ -5,9 +5,9 @@ package mysql
 import (
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/sql/sqltest"
-	"github.com/cayleygraph/cayley/internal/dock"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/sql/sqltest"
+	"github.com/epik-protocol/gateway/internal/dock"
 )
 
 func makeMysqlVersion(image string) sqltest.DatabaseFunc {

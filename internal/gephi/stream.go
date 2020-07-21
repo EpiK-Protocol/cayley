@@ -13,15 +13,15 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	"github.com/cayleygraph/cayley/query/path"
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc/rdf"
 	"github.com/cayleygraph/quad/voc/rdfs"
 	"github.com/cayleygraph/quad/voc/schema"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/gateway/query/shape"
 )
 
 const (

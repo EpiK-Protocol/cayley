@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/internal/decompressor"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/nquads"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/internal/decompressor"
 )
 
 // Load loads a graph from the given path and write it to qw.  See

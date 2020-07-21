@@ -9,14 +9,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/iterator"
-	graphlog "github.com/cayleygraph/cayley/graph/log"
-	"github.com/cayleygraph/cayley/graph/refs"
-	"github.com/cayleygraph/cayley/internal/lru"
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/pquads"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/iterator"
+	graphlog "github.com/epik-protocol/gateway/graph/log"
+	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/gateway/internal/lru"
 )
 
 func registerQuadStore(name, typ string) {

@@ -23,9 +23,9 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/internal/gephi"
-	cayleyhttp "github.com/cayleygraph/cayley/server/http"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/internal/gephi"
+	cayleyhttp "github.com/epik-protocol/gateway/server/http"
 )
 
 var ui = packr.New("UI", "../../ui")

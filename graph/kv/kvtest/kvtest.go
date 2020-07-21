@@ -5,12 +5,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/graph/graphtest"
-	"github.com/cayleygraph/cayley/graph/graphtest/testutil"
-	"github.com/cayleygraph/cayley/graph/kv"
-	"github.com/cayleygraph/cayley/query/shape"
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/graph/graphtest"
+	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	"github.com/epik-protocol/gateway/graph/kv"
+	"github.com/epik-protocol/gateway/query/shape"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/stretchr/testify/require"
 )

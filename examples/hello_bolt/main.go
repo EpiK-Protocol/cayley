@@ -7,10 +7,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/cayleygraph/cayley"
-	"github.com/cayleygraph/cayley/graph"
-	_ "github.com/cayleygraph/cayley/graph/kv/bolt"
 	"github.com/cayleygraph/quad"
+	cayley "github.com/epik-protocol/gateway"
+	"github.com/epik-protocol/gateway/graph"
+	_ "github.com/epik-protocol/gateway/graph/kv/bolt"
 )
 
 func main() {

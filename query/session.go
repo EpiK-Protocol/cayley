@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cayleygraph/cayley/graph"
+	"github.com/epik-protocol/gateway/graph"
 )
 
 var ErrParseMore = errors.New("query: more input required")

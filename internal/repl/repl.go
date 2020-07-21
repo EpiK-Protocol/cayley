@@ -28,10 +28,10 @@ import (
 
 	"github.com/peterh/liner"
 
-	"github.com/cayleygraph/cayley/clog"
-	"github.com/cayleygraph/cayley/graph"
-	"github.com/cayleygraph/cayley/query"
 	"github.com/cayleygraph/quad/nquads"
+	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/gateway/query"
 )
 
 func trace(s string) (string, time.Time) {
