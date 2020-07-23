@@ -28,6 +28,8 @@ import (
 
 const QuadStoreType = "memstore"
 
+var EmptyQuad quad.Quad
+
 func init() {
 	graph.RegisterQuadStore(QuadStoreType, graph.QuadStoreRegistration{
 		NewFunc: func(string, graph.Options) (graph.QuadStore, error) {
@@ -113,13 +115,28 @@ func (cqi CidQuadIndex) Add(cid string, id int64) {
 func (cqi CidQuadIndex) Delete(cid string, id int64) {
 	set, ok := cqi.index[cid]
 	if !ok {
-		// TODO: error when not found?
 		return
 	}
 	delete(set, id)
 	if len(set) == 0 {
 		delete(cqi.index, cid)
 	}
+}
+
+func (cqi CidQuadIndex) DeleteByCid(cid string) {
+	delete(cqi.index, cid)
+}
+
+func (cqi CidQuadIndex) Has(cid string, id int64) bool {
+	set, exist := cqi.index[cid]
+	if exist {
+		_, exist = set[id]
+	}
+	return exist
+}
+
+func (cqi CidQuadIndex) GetQuadIdSet(cid string) QuadIdSet {
+	return cqi.index[cid]
 }
 
 type Primitive struct {
@@ -175,9 +192,11 @@ type QuadStore struct {
 	all     []*Primitive // might not be sorted by id
 	reading bool         // someone else might be reading "all" slice - next insert/delete should clone it
 	index   QuadDirectionIndex
-	cqIndex CidQuadIndex
 	horizon int64 // used only to assign ids to tx
 	// vip_index map[string]map[int64]map[string]map[int64]*b.Tree
+
+	syncedEpoch int64
+	cqIndex     CidQuadIndex
 }
 
 // New creates a new in-memory quad store and loads provided quads.
@@ -451,7 +470,9 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 				}
 			case graph.Delete:
 				if !ignoreOpts.IgnoreMissing {
-					if _, _, ok := qs.findQuad(d.Quad); !ok {
+					if id, _, ok := qs.findQuad(d.Quad); !ok {
+						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
+					} else if d.Quad != EmptyQuad && !qs.cqIndex.Has(d.Cid, id) {
 						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
 					}
 				}
@@ -469,7 +490,17 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 				qs.cqIndex.Add(d.Cid, id)
 			}
 		case graph.Delete:
-			if id, _, ok := qs.findQuad(d.Quad); ok {
+			if d.Quad == EmptyQuad {
+				for id := range qs.cqIndex.GetQuadIdSet(d.Cid) {
+					if !ignoreOpts.IgnoreMissing {
+						if _, ok := qs.prim[id]; !ok {
+							return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
+						}
+					}
+					qs.Delete(id)
+				}
+				qs.cqIndex.DeleteByCid(d.Cid)
+			} else if id, _, ok := qs.findQuad(d.Quad); ok {
 				qs.Delete(id)
 				qs.cqIndex.Delete(d.Cid, id)
 			}
@@ -477,8 +508,12 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 			// TODO: ideally we should rollback it
 			return &graph.DeltaError{Delta: d, Err: graph.ErrInvalidAction}
 		}
+
+		if d.Epoch > qs.syncedEpoch {
+			qs.syncedEpoch = d.Epoch
+		}
 	}
-	qs.horizon++
+	qs.horizon++ // TODO: what for?
 	return nil
 }
 
@@ -551,6 +586,7 @@ func (qs *QuadStore) Stats(ctx context.Context, exact bool) (graph.Stats, error)
 			Value: int64(len(qs.quads)),
 			Exact: true,
 		},
+		Epoch: qs.syncedEpoch,
 	}, nil
 }
 

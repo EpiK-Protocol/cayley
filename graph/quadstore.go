@@ -85,6 +85,7 @@ type QuadIndexer interface {
 type Stats struct {
 	Nodes refs.Size // number of nodes
 	Quads refs.Size // number of quads
+	Epoch int64     // indexed epoch
 }
 
 type QuadStore interface {

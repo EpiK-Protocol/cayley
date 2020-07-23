@@ -51,6 +51,7 @@ const (
 
 type Delta struct {
 	Cid    string
+	Epoch  int64
 	Quad   quad.Quad
 	Action Procedure
 }

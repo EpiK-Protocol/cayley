@@ -1,7 +1,6 @@
 package graph
 
 import (
-	"context"
 	"fmt"
 )
 
@@ -18,10 +17,10 @@ type SyncerRegistration struct {
 }
 
 type Syncer interface {
-	// at - ChainEpoch
-	RetrieveAll(ctx context.Context, at int64, handler HandleDeltaFunc)
-	// since, to - ChainEpoch
-	RetrieveDelta(ctx context.Context, since, to int64, handler HandleDeltaFunc)
+	// // at - ChainEpoch
+	// RetrieveAll(ctx context.Context, at int64, handler HandleDeltaFunc)
+	// // since, to - ChainEpoch
+	// RetrieveDelta(ctx context.Context, since, to int64, handler HandleDeltaFunc)
 	Start()
 	Stop()
 }

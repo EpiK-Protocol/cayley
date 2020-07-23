@@ -16,6 +16,7 @@ require (
 	github.com/docker/docker v0.7.3-0.20180412203414-a422774e593b // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/dop251/goja v0.0.0-20190105122144-6d5bf35058fa
+	github.com/filecoin-project/go-jsonrpc v0.1.1
 	github.com/flimzy/diff v0.1.6 // indirect
 	github.com/fsouza/go-dockerclient v1.2.2
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
@@ -23,10 +24,9 @@ require (
 	github.com/gobuffalo/packr/v2 v2.7.1
 	github.com/gogo/protobuf v1.3.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/hidal-go/hidalgo v0.0.0-20190814174001-42e03f3b5eaa
-	github.com/ipfs/go-cid v0.0.5
+	github.com/ipfs/go-cid v0.0.6
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.3.0+incompatible
 	github.com/julienschmidt/httprouter v1.2.0
@@ -48,14 +48,13 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.4.0
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.5.1
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tylertreat/BoomFilters v0.0.0-20181028192813-611b3dbe80e8
 	go.etcd.io/bbolt v1.3.3 // indirect
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7
 	golang.org/x/sys v0.0.0-20191009170203-06d7bd2c5f4f // indirect
-	golang.org/x/tools v0.0.0-20191010075000-0337d82405ff // indirect
 	google.golang.org/appengine v1.6.1
 	gopkg.in/olivere/elastic.v5 v5.0.81 // indirect
 )
