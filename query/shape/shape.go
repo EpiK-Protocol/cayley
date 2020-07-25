@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	debugShapes    = os.Getenv("CAYLEY_DEBUG_SHAPES") == "true"
-	debugOptimizer = os.Getenv("CAYLEY_DEBUG_OPTIMIZER") == "true"
+	debugShapes    = os.Getenv("EPIKGATEWAY_DEBUG_SHAPES") == "true"
+	debugOptimizer = os.Getenv("EPIKGATEWAY_DEBUG_OPTIMIZER") == "true"
 )
 
 // Shape represent a query tree shape.

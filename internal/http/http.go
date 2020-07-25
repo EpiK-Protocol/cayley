@@ -25,7 +25,7 @@ import (
 
 	"github.com/epik-protocol/gateway/graph"
 	"github.com/epik-protocol/gateway/internal/gephi"
-	cayleyhttp "github.com/epik-protocol/gateway/server/http"
+	gatewayhttp "github.com/epik-protocol/gateway/server/http"
 )
 
 var ui = packr.New("UI", "../../ui")
@@ -64,7 +64,7 @@ func SetupRoutes(handle *graph.Handle, cfg *Config) error {
 	r.GET("/gephi/gs", gs.ServeHTTP)
 
 	// Register API V2
-	api2 := cayleyhttp.NewBoundAPIv2(handle, r)
+	api2 := gatewayhttp.NewBoundAPIv2(handle, r)
 	api2.SetReadOnly(cfg.ReadOnly)
 	api2.SetBatchSize(cfg.Batch)
 	api2.SetQueryTimeout(cfg.Timeout)

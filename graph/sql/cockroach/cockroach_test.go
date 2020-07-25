@@ -48,7 +48,7 @@ func makeCockroach(t testing.TB) (string, graph.Options, func()) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	const dbName = "cayley"
+	const dbName = "gateway"
 	if _, err = db.Exec("CREATE DATABASE " + dbName); err != nil {
 		closer()
 		t.Fatal(err)

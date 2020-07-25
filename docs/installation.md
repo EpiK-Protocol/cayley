@@ -1,27 +1,27 @@
-# Install Cayley
+# Install Gateway
 
-## Install Cayley on Ubuntu
+## Install Gateway on Ubuntu
 
 ```text
-snap install --edge --devmode cayley
+snap install --edge --devmode gateway
 ```
 
-## Install Cayley on macOS
+## Install Gateway on macOS
 
 ### Install Homebrew
 
 macOS does not include the Homebrew brew package by default. Install brew using the [official instructions](https://brew.sh/#install)
 
-### Install Cayley
+### Install Gateway
 
 ```bash
-brew install cayley
+brew install gateway
 ```
 
-## Install Cayley with Docker
+## Install Gateway with Docker
 
 ```bash
-docker run -p 64210:64210 cayleygraph/cayley
+docker run -p 64210:64210 epik-protocol/gateway
 ```
 
 For more information see [Container Documentation](deployment/container.md)

@@ -168,7 +168,7 @@ func NewDumpDatabaseCmd() *cobra.Command {
 func NewUpgradeCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "upgrade",
-		Short: "Upgrade Cayley database to current supported format.",
+		Short: "Upgrade Epik-Gateway database to current supported format.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			printBackendInfo()
 			name := viper.GetString(KeyBackend)

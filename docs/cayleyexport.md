@@ -1,16 +1,16 @@
-# `cayleyexport`
+# `gatewayexport`
 
 ```
-cayleyexport <file>
+gatewayexport <file>
 ```
 
 ## Synopsis
 
-The `cayleyexport` tool exports content from a Cayley deployment.
+The `gatewayexport` tool exports content from a Gateway deployment.
 
-See the [`cayleyimport`](cayleyimport.md) document for more information regarding [`cayleyimport`](cayleyimport.md), which provides the inverse “importing” capability.
+See the [`gatewayimport`](gatewayimport.md) document for more information regarding [`gatewayimport`](gatewayimport.md), which provides the inverse “importing” capability.
 
-Run `cayleyexport` from the system command line, not the Cayley shell.
+Run `gatewayexport` from the system command line, not the Gateway shell.
 
 ## Arguments
 
@@ -18,15 +18,15 @@ Run `cayleyexport` from the system command line, not the Cayley shell.
 
 ### `--help`
 
-Returns information on the options and use of **cayleyexport**.
+Returns information on the options and use of **gatewayexport**.
 
 ### `--quiet`
 
-Runs **cayleyexport** in a quiet mode that attempts to limit the amount of output.
+Runs **gatewayexport** in a quiet mode that attempts to limit the amount of output.
 
 ### `--uri=<connectionString>`
 
-Specify a resolvable URI connection string (enclose in quotes) to connect to the Cayley deployment.
+Specify a resolvable URI connection string (enclose in quotes) to connect to the Gateway deployment.
 
 ```
 --uri "http://host[:port]"
@@ -38,4 +38,4 @@ Format to use for the exported data (if can not be detected defaults to JSON-LD)
 
 ### `--out=<filename>`
 
-Specifies the location and name of a file to export the data to. If you do not specify a file, **cayleyexport** writes data to the standard output (e.g. “stdout”).
+Specifies the location and name of a file to export the data to. If you do not specify a file, **gatewayexport** writes data to the standard output (e.g. “stdout”).

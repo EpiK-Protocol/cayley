@@ -1,6 +1,6 @@
 # Gephi GraphStream
 
-Cayley supports graph visualisation in Gephi using GraphStream API.
+Gateway supports graph visualisation in Gephi using GraphStream API.
 
 Enpoint can be accessed by adding URL `http://localhost:64210/gephi/gs` to Gephi GraphStream client.
 
@@ -23,7 +23,7 @@ Sets streaming mode. Supported values:
 
 #### Raw mode
 
-In this mode Cayley directly streams selected quads to Gephi.
+In this mode Gateway directly streams selected quads to Gephi.
 
 Example URLs:
 
@@ -42,7 +42,7 @@ This mode may be useful to visualize small subgraphs, or graphs without metadata
 
 Example URL: `/gephi/gs?mode=nodes&limit=-1`
 
-In this mode Cayley streams all nodes and links associated with them, but instead of streaming common quads such as types it will inline them as Gephi properties.
+In this mode Gateway streams all nodes and links associated with them, but instead of streaming common quads such as types it will inline them as Gephi properties.
 
 Limit corresponds to a number of nodes returned.
 

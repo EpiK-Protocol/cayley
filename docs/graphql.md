@@ -1,8 +1,8 @@
 # GraphQL Guide
 
-**Disclaimer:** Cayley's GraphQL implementation is not strictly a GraphQL, but only a query language with the same syntax and mostly the same rules.
+**Disclaimer:** Gateway's GraphQL implementation is not strictly a GraphQL, but only a query language with the same syntax and mostly the same rules.
 
-We will use [this simple dataset](https://github.com/cayleygraph/cayley/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/data/testdata.nq) for our examples.
+We will use [this simple dataset](https://github.com/epik-protocol/gateway/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/data/testdata.nq) for our examples.
 
 Every query is represented by tree-like structure of nested objects and properties, similar to [MQL](mql.md).
 
@@ -139,7 +139,7 @@ Results:
 }
 ```
 
-_Note: Since Cayley has no knowledge about property types and schema, it might decide to return a property as a single value for one object and as an array for another object. This behavior will be fixed in future versions._
+_Note: Since Gateway has no knowledge about property types and schema, it might decide to return a property as a single value for one object and as an array for another object. This behavior will be fixed in future versions._
 
 ## Nested objects
 

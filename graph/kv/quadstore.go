@@ -85,7 +85,7 @@ func Register(name string, r Registration) {
 
 const (
 	latestDataVersion   = 2
-	envKVDefaultIndexes = "CAYLEY_KV_INDEXES"
+	envKVDefaultIndexes = "GATEWAY_KV_INDEXES"
 )
 
 var (

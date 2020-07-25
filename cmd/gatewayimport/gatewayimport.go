@@ -28,8 +28,8 @@ func NewCmd() *cobra.Command {
 	var uri, formatName string
 
 	var cmd = &cobra.Command{
-		Use:   "cayleyimport <file>",
-		Short: "Import data into Cayley. If no file is provided, cayleyimport reads from stdin.",
+		Use:   "gatewayimport <file>",
+		Short: "Import data into Gateway. If no file is provided, gatewayimport reads from stdin.",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if quiet {
@@ -93,7 +93,7 @@ func NewCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&uri, "uri", "", "http://127.0.0.1:64210", "Cayley URI connection string")
+	cmd.Flags().StringVarP(&uri, "uri", "", "http://127.0.0.1:64210", "Gateway URI connection string")
 	cmd.Flags().StringVarP(&formatName, "format", "", "", "format of the provided data (if can not be detected defaults to JSON-LD)")
 	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "hide all log output")
 	return cmd

@@ -1,6 +1,6 @@
-# Cayley Documentation
+# Gateway Documentation
 
-Welcome to the Cayley Manual! Cayley is an open-source graph database designed for ease of use and storing complex data. The manual introduces key concepts in Cayley, presents the query languages, and provides operational and administrative considerations and procedures as well as comprehensive reference section.
+Welcome to the Gateway Manual! Gateway is an open-source graph database designed for ease of use and storing complex data. The manual introduces key concepts in Gateway, presents the query languages, and provides operational and administrative considerations and procedures as well as comprehensive reference section.
 
 ## Introduction
 
@@ -24,7 +24,7 @@ Welcome to the Cayley Manual! Cayley is an open-source graph database designed f
 * [Configuration](configuration.md)
 * [Migration](usage/migration.md)
 * [Usage as Container](deployment/container.md)
-* [Usage in Kubernetes](https://github.com/cayleygraph/cayley/tree/06f7114d4ad1725d58f16fc5fdc9394f293c3539/docs/k8s.md)
+* [Usage in Kubernetes](https://github.com/epik-protocol/gateway/tree/06f7114d4ad1725d58f16fc5fdc9394f293c3539/docs/k8s.md)
 
 ## Developers
 

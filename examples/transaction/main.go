@@ -5,19 +5,19 @@ import (
 	"log"
 
 	"github.com/cayleygraph/quad"
-	cayley "github.com/epik-protocol/gateway"
+	gateway "github.com/epik-protocol/gateway"
 )
 
 func main() {
 	// To see how most of this works, see hello_world -- this just add in a transaction
-	store, err := cayley.NewMemoryGraph()
+	store, err := gateway.NewMemoryGraph()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	// Create a transaction of work to do
-	// NOTE: the transaction is independent of the storage type, so comes from cayley rather than store
-	t := cayley.NewTransaction()
+	// NOTE: the transaction is independent of the storage type, so comes from gateway rather than store
+	t := gateway.NewTransaction()
 	t.AddQuad(quad.Make("food", "is", "good", nil))
 	t.AddQuad(quad.Make("phrase of the day", "is of course", "Hello World!", nil))
 	t.AddQuad(quad.Make("cats", "are", "awesome", nil))
@@ -30,7 +30,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	p := cayley.StartPath(store, quad.String("cats")).Out(quad.String("are"))
+	p := gateway.StartPath(store, quad.String("cats")).Out(quad.String("are"))
 
 	err = p.Iterate(nil).EachValue(nil, func(v quad.Value) {
 		fmt.Println("cats are", v.Native())

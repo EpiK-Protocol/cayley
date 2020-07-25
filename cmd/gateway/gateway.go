@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/epik-protocol/gateway/cmd/cayley/command"
+	"github.com/epik-protocol/gateway/cmd/gateway/command"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,10 +60,10 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "cayley",
-		Short: "Cayley is a graph store and graph query layer.",
+		Use:   "gateway",
+		Short: "Gateway is a graph store and graph query layer.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			clog.Infof("Cayley version: %s (%s)", version.Version, version.GitHash)
+			clog.Infof("Gateway version: %s (%s)", version.Version, version.GitHash)
 			if conf, _ := cmd.Flags().GetString("config"); conf != "" {
 				viper.SetConfigFile(conf)
 			}
@@ -101,11 +101,11 @@ var (
 	}
 	versionCmd = &cobra.Command{
 		Use:   "version",
-		Short: "Prints the version of Cayley.",
+		Short: "Prints the version of Gateway.",
 		// do not execute any persistent actions
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {},
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Cayley version:", version.Version)
+			fmt.Println("Gateway version:", version.Version)
 			fmt.Println("Git commit hash:", version.GitHash)
 			if version.BuildDate != "" {
 				fmt.Println("Build date:", version.BuildDate)
@@ -122,12 +122,12 @@ func (pFlag) Type() string { return "string" }
 
 func init() {
 	// set config names and paths
-	viper.SetConfigName("cayley")
-	viper.SetEnvPrefix("cayley")
+	viper.SetConfigName("gateway")
+	viper.SetEnvPrefix("epikgateway")
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("$HOME/.cayley/")
+	viper.AddConfigPath("$HOME/.epikgateway/")
 	viper.AddConfigPath("/etc/")
-	if conf := os.Getenv("CAYLEY_CFG"); conf != "" {
+	if conf := os.Getenv("EPIKGATEWAY_CFG"); conf != "" {
 		viper.SetConfigFile(conf)
 	}
 

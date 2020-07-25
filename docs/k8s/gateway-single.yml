@@ -1,16 +1,16 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: cayley
+  name: gateway
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: cayley
-  namespace: cayley
+  name: gateway
+  namespace: gateway
 spec:
   selector:
-    app: cayley
+    app: gateway
   ports:
   - protocol: TCP
     port: 80
@@ -19,8 +19,8 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: cayley-pvc
-  namespace: cayley
+  name: gateway-pvc
+  namespace: gateway
 spec:
   accessModes:
   - ReadWriteOnce
@@ -32,34 +32,34 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cayley
-  namespace: cayley
+  name: gateway
+  namespace: gateway
 spec:
   replicas: 1 # cannot be really scaled because of local backend
   template:
     metadata:
-      namespace: cayley
+      namespace: gateway
       labels:
-        app: cayley
+        app: gateway
     spec:
       initContainers:
-      - name: cayley-init
-        image: cayleygraph/cayley:v0.7.5
+      - name: gateway-init
+        image: epik-protocol/gateway:v0.1.0
         command:
-        - cayley
+        - gateway
         - init
-        - -c=/etc/cayley.json
+        - -c=/etc/epikgateway.json
         volumeMounts:
         - mountPath: /data
           name: database
       containers:
-      - name: cayley
-        image: cayleygraph/cayley:v0.7.5
+      - name: gateway
+        image: epik-protocol/gateway:v0.1.0
         command:
-        - cayley
+        - gateway
         - http
         - --init # TODO: remove once initContainers is out of beta
-        - -c=/etc/cayley.json
+        - -c=/etc/epikgateway.json
         - --host=:64210
         ports:
         - name: http
@@ -70,4 +70,4 @@ spec:
       volumes:
       - name: database
         persistentVolumeClaim:
-          claimName: cayley-pvc
+          claimName: gateway-pvc

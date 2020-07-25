@@ -32,20 +32,20 @@ RUN packr2
 # Pass a Git short SHA as build information to be used for displaying version
 RUN SHORT_SHA=$(git rev-parse --short=12 HEAD); \
     go build \
-    -ldflags="-linkmode external -extldflags -static -X github.com/cayleygraph/cayley/version.GitHash=$SHORT_SHA" \
+    -ldflags="-linkmode external -extldflags -static -X github.com/epik-protocol/gateway/version.GitHash=$SHORT_SHA" \
     -a \
     -installsuffix cgo \
-    -o /fs/bin/cayley \
+    -o /fs/bin/gateway \
     -v \
-    ./cmd/cayley
+    ./cmd/gateway
 
 # Move persisted configuration into filesystem
-RUN mv configurations/persisted.json /fs/etc/cayley.json
+RUN mv configurations/persisted.json /fs/etc/epikgateway.json
 
 WORKDIR /fs
 
 # Initialize bolt indexes file
-RUN ./bin/cayley init --config etc/cayley.json
+RUN ./bin/gateway init --config etc/epikgateway.json
 
 FROM scratch
 
@@ -58,9 +58,9 @@ VOLUME [ "/data" ]
 
 EXPOSE 64210
 
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "cayley", "health" ]
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "gateway", "health" ]
 
 # Adding everything to entrypoint allows us to init, load and serve only with
 # arguments passed to docker run. For example:
-# `docker run cayleygraph/cayley --init -i /data/my_data.nq`
-ENTRYPOINT ["cayley", "http", "--host=:64210"]
+# `docker run epik-protocol/gateway --init -i /data/my_data.nq`
+ENTRYPOINT ["gateway", "http", "--host=:64210"]

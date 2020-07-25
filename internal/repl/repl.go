@@ -81,10 +81,10 @@ func Run(ctx context.Context, qu string, ses query.REPLSession) error {
 const (
 	defaultLanguage = "gizmo"
 
-	ps1 = "cayley> "
+	ps1 = "gateway> "
 	ps2 = "...     "
 
-	history = ".cayley_history"
+	history = ".gateway_history"
 )
 
 func Repl(ctx context.Context, h *graph.Handle, queryLanguage string, timeout time.Duration) error {

@@ -32,9 +32,9 @@ var testDecompressor = []struct {
 }{
 	{
 		message: "text input",
-		input:   strings.NewReader("cayley data\n"),
+		input:   strings.NewReader("gateway data\n"),
 		err:     nil,
-		expect:  []byte("cayley data\n"),
+		expect:  []byte("gateway data\n"),
 		readErr: nil,
 	},
 	{

@@ -1,10 +1,10 @@
 # HTTP Methods
 
-This file covers deprecated v1 HTTP API. All the methods of v2 HTTP API is described in OpenAPI/Swagger [spec](https://github.com/cayleygraph/cayley/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/docs/api/swagger.yml) and can be viewed by importing `https://raw.githubusercontent.com/cayleygraph/cayley/master/docs/api/swagger.yml` URL into [Swagger Editor](https://editor.swagger.io/) or [Swagger UI demo](http://petstore.swagger.io/).
+This file covers deprecated v1 HTTP API. All the methods of v2 HTTP API is described in OpenAPI/Swagger [spec](https://github.com/epik-protocol/gateway/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/docs/api/swagger.yml) and can be viewed by importing `https://raw.githubusercontent.com/epik-protocol/gateway/master/docs/api/swagger.yml` URL into [Swagger Editor](https://editor.swagger.io/) or [Swagger UI demo](http://petstore.swagger.io/).
 
 ## Gephi
 
-Cayley supports streaming to Gephi via [GraphStream](../query-languages/gephigraphstream.md).
+Gateway supports streaming to Gephi via [GraphStream](../query-languages/gephigraphstream.md).
 
 ## API v1
 

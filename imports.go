@@ -1,4 +1,4 @@
-package cayley
+package gateway
 
 import (
 	"github.com/cayleygraph/quad"

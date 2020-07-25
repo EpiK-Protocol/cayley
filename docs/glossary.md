@@ -49,13 +49,13 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 1. ...persisting RDF — storing it — became a thing, and these stores were called triple stores. Next they were called quad stores and included information about context and named graphs, then RDF stores, and most recently they call themselves “semantic graph database.” [source](https://neo4j.com/blog/rdf-triple-store-vs-labeled-property-graph-difference/)
 2. Adding a name to the triple makes a "quad store" or named graph. [source](https://en.wikipedia.org/wiki/Triplestore#Related_database_types)
 
-## Cayley
+## Gateway
 
-1. Cayley is a quad store that supports multiple storage backends.  It supports multiple query languages for traversing and filtering the named graphs formed by its quads, and it has associated tooling such as a CLI, HTTP server, and so on.
+1. Gateway is a quad store that supports multiple storage backends.  It supports multiple query languages for traversing and filtering the named graphs formed by its quads, and it has associated tooling such as a CLI, HTTP server, and so on.
 
 ## Gizmo
 
-1. A [Gremlin/TinkerPop](http://tinkerpop.apache.org/)-inspired query language for Cayley.  Looks a lot like JavaScript, the syntax is documented [here](https://github.com/cayleygraph/cayley/blob/master/docs/GizmoAPI.md#graphv).
+1. A [Gremlin/TinkerPop](http://tinkerpop.apache.org/)-inspired query language for Gateway.  Looks a lot like JavaScript, the syntax is documented [here](https://github.com/epik-protocol/gateway/blob/master/docs/GizmoAPI.md#graphv).
 
 ## g.V\(\)
 
@@ -98,7 +98,7 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 ## path
 
 1. Paths are just a set of helpers to build a query, but they are not that good for building something more complex. You can try using [Shapes](glossary.md#shape) for this - it will give you a full control of what the query actually does. [source](https://discourse.cayley.io/t/a-variety-of-questions/1183/2)
-2. Path represents either a morphism \(a pre-defined path stored for later use\), or a concrete path, consisting of a morphism and an underlying QuadStore. [source](https://godoc.org/github.com/cayleygraph/cayley/query/path#Path)
+2. Path represents either a morphism \(a pre-defined path stored for later use\), or a concrete path, consisting of a morphism and an underlying QuadStore. [source](https://godoc.org/github.com/epik-protocol/gateway/query/path#Path)
 3. Underlying code:
 
    ```go
@@ -118,7 +118,7 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
    type applyMorphism func(shape.Shape, *pathContext) (shape.Shape, *pathContext)
    ```
 
-   So, as previously stated, the [path](https://godoc.org/github.com/cayleygraph/cayley/query/path) package is just helper methods on top of the [shape](https://godoc.org/github.com/cayleygraph/cayley/graph/shape) package.
+   So, as previously stated, the [path](https://godoc.org/github.com/epik-protocol/gateway/query/path) package is just helper methods on top of the [shape](https://godoc.org/github.com/epik-protocol/gateway/graph/shape) package.
 
 ## morphism
 
@@ -147,7 +147,7 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 
 ## LinkTo iterator
 
-1. A LinksTo takes a subiterator of nodes, and contains an iteration of links which "link to" those nodes in a given direction. ... Can be seen as the dual of the HasA iterator. [source](https://github.com/cayleygraph/cayley/blob/1f53d04893ea9b2736e9b2277bbba3f47b88711a/graph/iterator/linksto.go#L17)
+1. A LinksTo takes a subiterator of nodes, and contains an iteration of links which "link to" those nodes in a given direction. ... Can be seen as the dual of the HasA iterator. [source](https://github.com/epik-protocol/gateway/blob/1f53d04893ea9b2736e9b2277bbba3f47b88711a/graph/iterator/linksto.go#L17)
    * Next\(\)ing a LinksTo is straightforward -- iterate through all links to things in the subiterator, and then advance the subiterator, and do it again.
      * To restate in pseudo-code; `results` is what would be returned in successive `Next()` calls:
 
@@ -175,8 +175,8 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 
 ## HasA iterator
 
-1. The HasA takes a subiterator of links, and acts as an iterator of nodes in the given direction. The name comes from the idea that a "link HasA subject" or a "link HasA predicate". [source](https://github.com/cayleygraph/cayley/blob/41bf496d9dfe622b385c1482789480df8b106472/graph/iterator/hasa.go#L17)
-   * Next\(\), [We have a subiterator we can get a value from, and we can take that resultant quad, pull our direction out of it, and return that.](https://github.com/cayleygraph/cayley/blob/41bf496d9dfe622b385c1482789480df8b106472/graph/iterator/hasa.go#L206)
+1. The HasA takes a subiterator of links, and acts as an iterator of nodes in the given direction. The name comes from the idea that a "link HasA subject" or a "link HasA predicate". [source](https://github.com/epik-protocol/gateway/blob/41bf496d9dfe622b385c1482789480df8b106472/graph/iterator/hasa.go#L17)
+   * Next\(\), [We have a subiterator we can get a value from, and we can take that resultant quad, pull our direction out of it, and return that.](https://github.com/epik-protocol/gateway/blob/41bf496d9dfe622b385c1482789480df8b106472/graph/iterator/hasa.go#L206)
 
      ```go
      var results []quad.Value
@@ -198,7 +198,7 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 
 ## shape
 
-1. Shape represent a query tree shape. [source](https://godoc.org/github.com/cayleygraph/cayley/graph/shape#Shape)
+1. Shape represent a query tree shape. [source](https://godoc.org/github.com/epik-protocol/gateway/graph/shape#Shape)
 
    ```go
     type Shape interface {
@@ -212,7 +212,7 @@ _Note: this definitions in this glossary are sequenced so that they build on eac
 
 ## token
 
-1. In the context of a [quad store](https://godoc.org/github.com/cayleygraph/cayley/graph#QuadStore), a [graph.Value](https://godoc.org/github.com/cayleygraph/cayley/graph#Value).  However the backend wishes to implement it, a Value is merely a token to a quad or a node that the backing store itself understands, and the base iterators pass around.    
+1. In the context of a [quad store](https://godoc.org/github.com/epik-protocol/gateway/graph#QuadStore), a [graph.Value](https://godoc.org/github.com/epik-protocol/gateway/graph#Value).  However the backend wishes to implement it, a Value is merely a token to a quad or a node that the backing store itself understands, and the base iterators pass around.    
 
     For example, in a very traditional, graphd-style graph, these are int64s \(guids of the primitives\). In a very direct sort of graph, these could be pointers to structs, or merely quads, or whatever works best for the backing store.
 

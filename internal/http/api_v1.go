@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/epik-protocol/gateway/graph"
-	cayleyhttp "github.com/epik-protocol/gateway/server/http"
+	gatewayhttp "github.com/epik-protocol/gateway/server/http"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -14,7 +14,7 @@ type API struct {
 }
 
 func (api *API) GetHandleForRequest(r *http.Request) (*graph.Handle, error) {
-	return cayleyhttp.HandleForRequest(api.handle, "single", nil, r)
+	return gatewayhttp.HandleForRequest(api.handle, "single", nil, r)
 }
 
 func (api *API) RWOnly(handler httprouter.Handle) httprouter.Handle {

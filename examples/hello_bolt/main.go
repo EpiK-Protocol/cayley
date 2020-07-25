@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/cayleygraph/quad"
-	cayley "github.com/epik-protocol/gateway"
+	gateway "github.com/epik-protocol/gateway"
 	"github.com/epik-protocol/gateway/graph"
 	_ "github.com/epik-protocol/gateway/graph/kv/bolt"
 )
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	// Open and use the database
-	store, err := cayley.NewGraph("bolt", tmpdir, nil)
+	store, err := gateway.NewGraph("bolt", tmpdir, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -37,7 +37,7 @@ func main() {
 	store.AddQuad(quad.Make("phrase of the day", "is of course", "Hello BoltDB!", "demo graph"))
 
 	// Now we create the path, to get to our data
-	p := cayley.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
+	p := gateway.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
 
 	// This is more advanced example of the query.
 	// Simpler equivalent can be found in hello_world example.

@@ -24,8 +24,8 @@ func NewCmd() *cobra.Command {
 	var uri, formatName, out string
 
 	var cmd = &cobra.Command{
-		Use:   "cayleyexport",
-		Short: "Export data from Cayley. If no file is provided, cayleyexport writes to stdout.",
+		Use:   "gatewayexport",
+		Short: "Export data from Gateway. If no file is provided, gatewayexport writes to stdout.",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if quiet {
@@ -74,7 +74,7 @@ func NewCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&uri, "uri", "", "http://127.0.0.1:64210", "Cayley URI connection string")
+	cmd.Flags().StringVarP(&uri, "uri", "", "http://127.0.0.1:64210", "Gateway URI connection string")
 	cmd.Flags().StringVarP(&formatName, "format", "", "", "format of the provided data (if can not be detected defaults to JSON-LD)")
 	cmd.Flags().StringVarP(&out, "out", "o", "", "output file; if not specified, stdout is used")
 	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "hide all log output")

@@ -1,6 +1,6 @@
 builds:
-  - main: ./cmd/cayley
-    binary: cayley
+  - main: ./cmd/gateway
+    binary: gateway
     env:
       - CGO_ENABLED=0
     goos:
@@ -22,7 +22,7 @@ builds:
       - goos: darwin
         goarch: arm64
     ldflags:
-      - -s -w -X github.com/cayleygraph/cayley/version.Version={{.Version}} -X github.com/cayleygraph/cayley/version.GitHash={{.FullCommit}} -X github.com/cayleygraph/cayley/version.BuildDate={{.Date}}
+      - -s -w -X github.com/epik-protocol/gateway/version.Version={{.Version}} -X github.com/epik-protocol/gateway/version.GitHash={{.FullCommit}} -X github.com/epik-protocol/gateway/version.BuildDate={{.Date}}
 archives:
   - format: tar.gz
     format_overrides:
@@ -48,11 +48,11 @@ changelog:
       - "^test:"
       - "^ci:"
 snapcrafts:
-  - name: cayley
+  - name: gateway
     publish: false # TODO(dennwc): enable build when the package is reviewed
     summary: Open-source graph inspired by Freebase and Google's Knowledge Graph.
     description: |
-      Cayley is an open-source graph inspired by the graph database behind Freebase and Google's Knowledge Graph.
+      Gateway is an open-source graph inspired by the graph database behind Freebase and Google's Knowledge Graph.
       Its goal is to be a part of the developer's toolbox where Linked Data and graph-shaped data
       (semantic webs, social networks, etc) in general are concerned.
     grade: stable
@@ -60,11 +60,11 @@ snapcrafts:
     license: Apache-2.0
     base: core18
     apps:
-      cayley:
+      gateway:
         plugs: ["home", "network", "network-bind", "personal-files"]
     plugs:
       personal-files:
         read:
-          - $HOME/.cayley
+          - $HOME/.epikgateway
         write:
-          - $HOME/.cayley
+          - $HOME/.epikgateway

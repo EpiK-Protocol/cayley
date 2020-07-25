@@ -4,25 +4,25 @@ This guide will take you through starting a graph based on provided data.
 
 ## Prerequisites
 
-This tutorial requires you to be connected to **local Cayley installation**. For more information on installing Cayley locally, see [Install Cayley](installation.md).
+This tutorial requires you to be connected to **local Gateway installation**. For more information on installing Gateway locally, see [Install Gateway](installation.md).
 
-## Start Cayley
+## Start Gateway
 
 ```bash
-cayley http
+gateway http
 ```
 
 You should see:
 
 ```text
-Cayley version: 0.7.7 (dev snapshot)
+Gateway version: 0.1.0 (dev snapshot)
 using backend "memstore"
 listening on 127.0.0.1:64210, web interface at http://127.0.0.1:64210
 ```
 
 You can now open the web-interface on: [localhost:64210](http://localhost:64210/).
 
-Cayley is configured by default to run in memory \(That's what `backend memstore` means\). To change the configuration see the documentation for [Configuration File](configuration.md) or run `cayley http --help`.
+Gateway is configured by default to run in memory \(That's what `backend memstore` means\). To change the configuration see the documentation for [Configuration File](configuration.md) or run `gateway http --help`.
 
 For more information about the UI see: [UI Overview](usage/ui-overview.md)
 
@@ -30,12 +30,12 @@ For more information about the UI see: [UI Overview](usage/ui-overview.md)
 
 ### Download sample data
 
-[Sample Data](https://github.com/cayleygraph/cayley/raw/master/data/30kmoviedata.nq.gz)
+[Sample Data](https://github.com/epik-protocol/gateway/raw/master/data/30kmoviedata.nq.gz)
 
-### Run Cayley
+### Run Gateway
 
 ```bash
-cayley http --load 30kmoviedata.nq.gz
+gateway http --load 30kmoviedata.nq.gz
 ```
 
 ## Query Data

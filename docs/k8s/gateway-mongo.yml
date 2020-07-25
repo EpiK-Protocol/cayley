@@ -1,13 +1,13 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: cayley
+  name: gateway
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo
-  namespace: cayley
+  namespace: gateway
   labels:
     name: mongo
 spec:
@@ -23,13 +23,13 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: mongo
-  namespace: cayley
+  namespace: gateway
 spec:
   serviceName: "mongo"
   replicas: 3
   template:
     metadata:
-      namespace: cayley
+      namespace: gateway
       labels:
         role: mongo
         environment: test
@@ -68,11 +68,11 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: cayley
-  namespace: cayley
+  name: gateway
+  namespace: gateway
 spec:
   selector:
-    app: cayley
+    app: gateway
   ports:
   - protocol: TCP
     port: 80
@@ -81,29 +81,29 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cayley
-  namespace: cayley
+  name: gateway
+  namespace: gateway
 spec:
   replicas: 1
   template:
     metadata:
-      namespace: cayley
+      namespace: gateway
       labels:
-        app: cayley
+        app: gateway
     spec:
       initContainers:
-      - name: cayley-init
-        image: cayleygraph/cayley:v0.7.5
+      - name: gateway-init
+        image: epik-protocol/gateway:v0.1.0
         command:
-        - cayley
+        - gateway
         - init
         - -d=mongo
         - -a=mongo
       containers:
-      - name: cayley
-        image: cayleygraph/cayley:v0.7.5
+      - name: gateway
+        image: epik-protocol/gateway:v0.1.0
         command:
-        - cayley
+        - gateway
         - http
         - --init # TODO: remove once initContainers works properly
         - -d=mongo

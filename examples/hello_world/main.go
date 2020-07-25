@@ -5,12 +5,12 @@ import (
 	"log"
 
 	"github.com/cayleygraph/quad"
-	cayley "github.com/epik-protocol/gateway"
+	gateway "github.com/epik-protocol/gateway"
 )
 
 func main() {
 	// Create a brand new graph
-	store, err := cayley.NewMemoryGraph()
+	store, err := gateway.NewMemoryGraph()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -18,7 +18,7 @@ func main() {
 	store.AddQuad(quad.Make("phrase of the day", "is of course", "Hello World!", nil))
 
 	// Now we create the path, to get to our data
-	p := cayley.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
+	p := gateway.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
 
 	// Now we iterate over results. Arguments:
 	// 1. Optional context used for cancellation.

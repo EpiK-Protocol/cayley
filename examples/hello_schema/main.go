@@ -10,7 +10,7 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	cayley "github.com/epik-protocol/gateway"
+	gateway "github.com/epik-protocol/gateway"
 	"github.com/epik-protocol/gateway/graph"
 	_ "github.com/epik-protocol/gateway/graph/kv/bolt"
 	"github.com/epik-protocol/gateway/schema"
@@ -67,7 +67,7 @@ func main() {
 	checkErr(err)
 
 	// Open and use the database
-	store, err := cayley.NewGraph("bolt", tmpdir, nil)
+	store, err := gateway.NewGraph("bolt", tmpdir, nil)
 	checkErr(err)
 	defer store.Close()
 	qw := graph.NewWriter(store)

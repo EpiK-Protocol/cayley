@@ -1,6 +1,6 @@
 # Quickstart as Library
 
-Currently, Cayley supports being used as a Go library for other projects. To use it in such a way, here's a quick example:
+Currently, Gateway supports being used as a Go library for other projects. To use it in such a way, here's a quick example:
 
 ```go
 package main
@@ -9,13 +9,13 @@ import (
     "fmt"
     "log"
 
-    "github.com/cayleygraph/cayley"
+    "github.com/epik-protocol/gateway"
     "github.com/cayleygraph/quad"
 )
 
 func main() {
     // Create a brand new graph
-    store, err := cayley.NewMemoryGraph()
+    store, err := gateway.NewMemoryGraph()
     if err != nil {
         log.Fatalln(err)
     }
@@ -23,7 +23,7 @@ func main() {
     store.AddQuad(quad.Make("phrase of the day", "is of course", "Hello World!", nil))
 
     // Now we create the path, to get to our data
-    p := cayley.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
+    p := gateway.StartPath(store, quad.String("phrase of the day")).Out(quad.String("is of course"))
 
     // Now we iterate over results. Arguments:
     // 1. Optional context used for cancellation.
@@ -42,22 +42,22 @@ func main() {
 To use other backends, you can empty-import them, eg
 
 ```go
-import _ "github.com/cayleygraph/cayley/graph/kv/bolt"
+import _ "github.com/epik-protocol/gateway/graph/kv/bolt"
 ```
 
 And use them with a call like
 
 ```go
-import "github.com/cayleygraph/cayley/graph"
+import "github.com/epik-protocol/gateway/graph"
 
 func open() {
   // Initialize the database
   graph.InitQuadStore("bolt", path, nil)
 
   // Open and use the database
-  cayley.NewGraph("bolt", path, nil)
+  gateway.NewGraph("bolt", path, nil)
 }
 ```
 
-More runnable examples are available in [examples](https://github.com/cayleygraph/cayley/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/examples/README.md) folder.
+More runnable examples are available in [examples](https://github.com/epik-protocol/gateway/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/examples/README.md) folder.
 

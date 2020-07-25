@@ -10,100 +10,100 @@ import (
 
 var (
 	mApplyBatch = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "cayley_apply_deltas_batch",
+		Name: "gateway_apply_deltas_batch",
 		Help: "Number of quads in a buffer for ApplyDeltas or WriteQuads.",
 	})
 	mApplySeconds = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "cayley_apply_deltas_seconds",
+		Name: "gateway_apply_deltas_seconds",
 		Help: "Time to write a buffer in ApplyDeltas or WriteQuads.",
 	})
 
 	mNodesNew = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_nodes_new_count",
+		Name: "gateway_kv_nodes_new_count",
 		Help: "Number new nodes created.",
 	})
 	mNodesUpd = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_nodes_upd_count",
+		Name: "gateway_kv_nodes_upd_count",
 		Help: "Number of node refcount updates.",
 	})
 	mNodesDel = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_nodes_del_count",
+		Name: "gateway_kv_nodes_del_count",
 		Help: "Number of node deleted.",
 	})
 
 	mQuadsBloomHit = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_quads_bloom_hits",
+		Name: "gateway_kv_quads_bloom_hits",
 		Help: "Number of times the quad bloom filter returned a negative result.",
 	})
 	mQuadsBloomMiss = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_quads_bloom_miss",
+		Name: "gateway_kv_quads_bloom_miss",
 		Help: "Number of times the quad bloom filter returned a positive result.",
 	})
 
 	mPrimitiveFetch = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_primitive_fetch",
+		Name: "gateway_kv_primitive_fetch",
 		Help: "Number of primitives fetched from KV.",
 	})
 	mPrimitiveFetchMiss = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_primitive_fetch_miss",
+		Name: "gateway_kv_primitive_fetch_miss",
 		Help: "Number of primitives that were not found in KV.",
 	})
 	mPrimitiveAppend = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_primitive_append",
+		Name: "gateway_kv_primitive_append",
 		Help: "Number of primitives appended to log.",
 	})
 
 	mIndexWriteBufferEntries = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "cayley_kv_index_buffer_entries",
+		Name: "gateway_kv_index_buffer_entries",
 		Help: "Number of entries in the index write buffer.",
 	}, []string{"index"})
 	mIndexWriteBufferFlushBatch = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name: "cayley_kv_index_buffer_flush_batch",
+		Name: "gateway_kv_index_buffer_flush_batch",
 		Help: "Number of entries in the batch for flushing index entries.",
 	}, []string{"index"})
 	mIndexEntrySizeBytes = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name: "cayley_kv_index_entry_size_bytes",
+		Name: "gateway_kv_index_entry_size_bytes",
 		Help: "Size of a single index entry.",
 	}, []string{"index"})
 
 	mKVGet = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_get_count",
+		Name: "gateway_kv_get_count",
 		Help: "Number of get KV calls.",
 	})
 	mKVGetMiss = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_get_miss",
+		Name: "gateway_kv_get_miss",
 		Help: "Number of get KV calls that found no value.",
 	})
 	mKVGetSize = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "cayley_kv_get_size",
+		Name: "gateway_kv_get_size",
 		Help: "Size of values returned from KV.",
 	})
 	mKVPut = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_put_count",
+		Name: "gateway_kv_put_count",
 		Help: "Number of put KV calls.",
 	})
 	mKVPutSize = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "cayley_kv_put_size",
+		Name: "gateway_kv_put_size",
 		Help: "Size of values put to KV.",
 	})
 	mKVDel = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_del_count",
+		Name: "gateway_kv_del_count",
 		Help: "Number of del KV calls.",
 	})
 	mKVScan = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_scan_count",
+		Name: "gateway_kv_scan_count",
 		Help: "Number of scan KV calls.",
 	})
 	mKVCommit = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_commit",
+		Name: "gateway_kv_commit",
 		Help: "Number of KV commits.",
 	})
 	mKVCommitSeconds = promauto.NewHistogram(prometheus.HistogramOpts{
-		Name: "cayley_kv_commit_seconds",
+		Name: "gateway_kv_commit_seconds",
 		Help: "Time to commit to KV.",
 	})
 	mKVRollback = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "cayley_kv_rollback",
+		Name: "gateway_kv_rollback",
 		Help: "Number of KV rollbacks.",
 	})
 )

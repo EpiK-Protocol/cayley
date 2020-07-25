@@ -1,7 +1,7 @@
 version: "2.2"
 services:
-  cayley:
-    image: cayleygraph/cayley
+  gateway:
+    image: epik-protocol/gateway
     command: http --db mongo --dbpath mongodb://mongo:27017
     ports:
       - 64210:64210

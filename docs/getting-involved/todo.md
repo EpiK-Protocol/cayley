@@ -1,6 +1,6 @@
 # TODOs
 
-The main source of our TODO list is our [Github Issues](https://github.com/cayleygraph/cayley/issues), so we are going to try to avoid duplicating them here.
+The main source of our TODO list is our [Github Issues](https://github.com/epik-protocol/gateway/issues), so we are going to try to avoid duplicating them here.
 
 ## Anything marked "TODO" in the code.
 

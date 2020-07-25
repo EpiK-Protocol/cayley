@@ -1,8 +1,8 @@
 # Table of contents
 
-* [Cayley Documentation](README.md)
+* [Gateway Documentation](README.md)
 * [Getting Started](getting-started.md)
-* [Install Cayley](installation.md)
+* [Install Gateway](installation.md)
 * [Configuration](configuration.md)
 
 ## Usage
@@ -26,7 +26,6 @@
 * [Glossary of Terms](getting-involved/glossary.md)
 * [Contributing](getting-involved/contributing.md)
 * [TODOs](getting-involved/todo.md)
-* [Locations of parts of Cayley](getting-involved/locations.md)
 
 ## Deployment
 

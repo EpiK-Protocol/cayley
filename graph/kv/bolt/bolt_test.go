@@ -25,7 +25,7 @@ import (
 )
 
 func makeBolt(t testing.TB) (hkv.KV, graph.Options, func()) {
-	tmpDir, err := ioutil.TempDir(os.TempDir(), "cayley_test_"+Type)
+	tmpDir, err := ioutil.TempDir(os.TempDir(), "gateway_test_"+Type)
 	if err != nil {
 		t.Fatalf("Could not create working directory: %v", err)
 	}

@@ -50,6 +50,7 @@ var (
 	}
 
 	// legacyQuadIndexes is a set of indexes used in Cayley < 0.7.6
+	// TODO: remove
 	legacyQuadIndexes = []QuadIndex{
 		{Dirs: []quad.Direction{quad.Subject}},
 		{Dirs: []quad.Direction{quad.Object}},

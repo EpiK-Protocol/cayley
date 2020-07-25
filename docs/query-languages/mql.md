@@ -2,7 +2,7 @@
 
 ## General
 
-Cayley's MQL implementation is a work-in-progress clone of [Freebase's MQL API](https://developers.google.com/freebase/mql/). At the moment, it supports very basic queries without some of the extended features. It also aims to be database-agnostic, meaning that the schema inference from Freebase does not \(yet\) apply.
+Gateway's MQL implementation is a work-in-progress clone of [Freebase's MQL API](https://developers.google.com/freebase/mql/). At the moment, it supports very basic queries without some of the extended features. It also aims to be database-agnostic, meaning that the schema inference from Freebase does not \(yet\) apply.
 
 Every JSON Object can be thought of as a node in the graph, and wrapping an object in a list means there may be several of these, or it may be repeated. A simple query like:
 

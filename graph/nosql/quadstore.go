@@ -31,7 +31,7 @@ import (
 	"github.com/epik-protocol/gateway/internal/lru"
 )
 
-const DefaultDBName = "cayley"
+const DefaultDBName = "gateway"
 
 type Registration struct {
 	NewFunc      NewFunc

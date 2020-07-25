@@ -1,4 +1,4 @@
-package cayleyhttp
+package gatewayhttp
 
 import (
 	"encoding/json"

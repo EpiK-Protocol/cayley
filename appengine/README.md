@@ -1,6 +1,6 @@
 # About appengine
 
-This directory contains a appengine deployable cayley graph instance.
+This directory contains a appengine deployable gateway graph instance.
 
 # Running/testing traditional appengine locally
 
@@ -11,7 +11,7 @@ Note: if you use a more recent version of Go locally, `goapp` get might
 accidentally copy the wrong files from the local `$GOPATH`.
 
 ```sh
-$ cd $GOPATH/src/github.com/cayleygraph/cayley/appengine
+$ cd $GOPATH/src/github.com/epik-protocol/gateway/appengine
 
 # check go version
 $ go version

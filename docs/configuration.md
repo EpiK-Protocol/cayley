@@ -1,6 +1,6 @@
 # Configuration
 
-Cayley can be configured using configuration file written in YAML / JSON or by passing flags to the command line. By default. All command line flags take precedence over the configuration file.
+Gateway can be configured using configuration file written in YAML / JSON or by passing flags to the command line. By default. All command line flags take precedence over the configuration file.
 
 * [Recommended Configuration](configuration.md#Recommended-Configuration)
 * [Configuration Options](configuration.md#Configuration-Options)
@@ -12,7 +12,7 @@ Cayley can be configured using configuration file written in YAML / JSON or by p
 
 ## Recommended Configuration
 
-By default, Cayley is using the `memstore` store. `memstore` works best for datasets that can fit into the memory of the machine and workloads which doesn't require persistency. For large datasets and/or workloads with require persistency it is recommended to use the `bolt` store.
+By default, Gateway is using the `memstore` store. `memstore` works best for datasets that can fit into the memory of the machine and workloads which doesn't require persistency. For large datasets and/or workloads with require persistency it is recommended to use the `bolt` store.
 
 ## Configuration Options
 
@@ -35,7 +35,7 @@ Determines the type of the underlying database. Options include:
 
 **NoSQL backends**
 
-Slower, as it incurs network traffic, but multiple Cayley instances can disappear and reconnect at will, across a potentially horizontally-scaled store.
+Slower, as it incurs network traffic, but multiple Gateway instances can disappear and reconnect at will, across a potentially horizontally-scaled store.
 
 * `mongo`: Stores the graph data and indices in a [MongoDB](https://www.mongodb.com/) instance.
 * `elastic`: Stores the graph data and indices in a [ElasticSearch](https://www.elastic.co/products/elasticsearch) instance.
@@ -118,7 +118,7 @@ Optionally disable syncing to disk per transaction. Nosync being true means much
 **`database_name`**
 
 * Type: String
-* Default: "cayley"
+* Default: "gateway"
 
 The name of the database within MongoDB to connect to. Manages its own collections and indices therein.
 
@@ -195,11 +195,11 @@ The number of quads to buffer from a loaded file before writing a block of quads
 
 ## Configuration File Location
 
-Cayley looks in the following locations for the configuration file \(named `cayley.yml` or `cayley.json`\):
+Gateway looks in the following locations for the configuration file \(named `gateway.yml` or `gateway.json`\):
 
 * Command line flag
-* The environment variable `$CAYLEY_CFG`
+* The environment variable `$EPIKGATEWAY_CFG`
 * Current directory
-* `$HOME/.cayley/`
+* `$HOME/.epikgateway/`
 * `/etc/`
 
