@@ -213,11 +213,11 @@ func openDatabase() (*graph.Handle, error) {
 		return nil, err
 	}
 	// TODO: make it optional
-	syc, err := graph.NewSyncer("chain", qs)
+	lis, err := graph.NewListener("chain", qs)
 	if err != nil {
 		return nil, err
 	}
-	return &graph.Handle{QuadStore: qs, QuadWriter: qw, Syncer: syc}, nil
+	return &graph.Handle{QuadStore: qs, QuadWriter: qw, Listener: lis}, nil
 }
 
 func openForQueries(cmd *cobra.Command) (*graph.Handle, error) {

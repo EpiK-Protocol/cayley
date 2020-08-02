@@ -71,6 +71,8 @@ func (nopWriter) Close() error {
 	return nil
 }
 
+func (qs *Oldstore) SetEpoch(epoch int64) error { return nil }
+
 func (qs *Oldstore) ApplyDeltas([]graph.Delta, graph.IgnoreOpts) error { return nil }
 
 func (qs *Oldstore) Quad(graph.Ref) quad.Quad { return quad.Quad{} }
@@ -139,7 +141,7 @@ func (qs *Store) ValueOf(s quad.Value) graph.Ref {
 	return nil
 }
 
-func (qs *Store) ApplyDeltas([]graph.Delta, graph.IgnoreOpts) error { return nil }
+func (qs *Store) ApplyDeltas(int64, []graph.Delta, graph.IgnoreOpts) error { return nil }
 
 func (qs *Store) NewQuadWriter() (quad.WriteCloser, error) {
 	return nopWriter{}, nil

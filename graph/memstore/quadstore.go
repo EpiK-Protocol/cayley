@@ -90,53 +90,36 @@ func (qdi QuadDirectionIndex) Get(d quad.Direction, id int64) (*Tree, bool) {
 	return tree, ok
 }
 
-type QuadIdSet map[int64]interface{}
 type CidQuadIndex struct {
-	index map[string]QuadIdSet
+	index map[string]int64
 }
 
 func NewCidQuadIndex() CidQuadIndex {
-	return CidQuadIndex{map[string]QuadIdSet{}}
+	return CidQuadIndex{map[string]int64{}}
 }
 
-func (cqi CidQuadIndex) Add(cid string, id int64) {
+func (cqi CidQuadIndex) Add(cid string, id int64) bool {
 	if len(cid) == 0 || id == 0 {
-		//
-		return
+		return false
 	}
-	set, ok := cqi.index[cid]
-	if !ok {
-		set = make(QuadIdSet)
-		cqi.index[cid] = set
+	_, exist := cqi.index[cid]
+	if !exist {
+		cqi.index[cid] = id
 	}
-	set[id] = nil
+	return !exist
 }
 
-func (cqi CidQuadIndex) Delete(cid string, id int64) {
-	set, ok := cqi.index[cid]
-	if !ok {
-		return
-	}
-	delete(set, id)
-	if len(set) == 0 {
-		delete(cqi.index, cid)
-	}
-}
-
-func (cqi CidQuadIndex) DeleteByCid(cid string) {
-	delete(cqi.index, cid)
-}
-
-func (cqi CidQuadIndex) Has(cid string, id int64) bool {
-	set, exist := cqi.index[cid]
+func (cqi CidQuadIndex) Delete(cid string) bool {
+	_, exist := cqi.index[cid]
 	if exist {
-		_, exist = set[id]
+		delete(cqi.index, cid)
 	}
 	return exist
 }
 
-func (cqi CidQuadIndex) GetQuadIdSet(cid string) QuadIdSet {
-	return cqi.index[cid]
+func (cqi CidQuadIndex) Get(cid string) (int64, bool) {
+	qid, exist := cqi.index[cid]
+	return qid, exist
 }
 
 type Primitive struct {
@@ -195,8 +178,8 @@ type QuadStore struct {
 	horizon int64 // used only to assign ids to tx
 	// vip_index map[string]map[int64]map[string]map[int64]*b.Tree
 
-	syncedEpoch int64
-	cqIndex     CidQuadIndex
+	epoch   int64
+	cqIndex CidQuadIndex
 }
 
 // New creates a new in-memory quad store and loads provided quads.
@@ -457,10 +440,13 @@ func (qs *QuadStore) findQuad(q quad.Quad) (int64, internalQuad, bool) {
 	return id, p, id != 0
 }
 
-func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOpts) error {
+func (qs *QuadStore) ApplyDeltas(epoch int64, deltas []graph.Delta, ignoreOpts graph.IgnoreOpts) error {
 	// Precheck the whole transaction (if required)
 	if !ignoreOpts.IgnoreDup || !ignoreOpts.IgnoreMissing {
 		for _, d := range deltas {
+			if len(d.Cid) == 0 {
+				return &graph.DeltaError{Delta: d, Err: graph.ErrCidMissing}
+			}
 			switch d.Action {
 			case graph.Add:
 				if !ignoreOpts.IgnoreDup {
@@ -470,10 +456,11 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 				}
 			case graph.Delete:
 				if !ignoreOpts.IgnoreMissing {
-					if id, _, ok := qs.findQuad(d.Quad); !ok {
+					if _, _, ok := qs.findQuad(d.Quad); !ok {
 						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
-					} else if d.Quad != EmptyQuad && !qs.cqIndex.Has(d.Cid, id) {
-						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
+					}
+					if _, ok := qs.cqIndex.Get(d.Cid); !ok {
+						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadIndexNotExist}
 					}
 				}
 			default:
@@ -483,6 +470,9 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 	}
 
 	for _, d := range deltas {
+		if len(d.Cid) == 0 {
+			return &graph.DeltaError{Delta: d, Err: graph.ErrCidMissing}
+		}
 		switch d.Action {
 		case graph.Add:
 			id, succ := qs.AddQuad(d.Quad)
@@ -490,30 +480,22 @@ func (qs *QuadStore) ApplyDeltas(deltas []graph.Delta, ignoreOpts graph.IgnoreOp
 				qs.cqIndex.Add(d.Cid, id)
 			}
 		case graph.Delete:
-			if d.Quad == EmptyQuad {
-				for id := range qs.cqIndex.GetQuadIdSet(d.Cid) {
-					if !ignoreOpts.IgnoreMissing {
-						if _, ok := qs.prim[id]; !ok {
-							return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
-						}
-					}
-					qs.Delete(id)
-				}
-				qs.cqIndex.DeleteByCid(d.Cid)
-			} else if id, _, ok := qs.findQuad(d.Quad); ok {
+			if id, ok := qs.cqIndex.Get(d.Cid); ok {
 				qs.Delete(id)
-				qs.cqIndex.Delete(d.Cid, id)
+				qs.cqIndex.Delete(d.Cid)
 			}
+			// if id, _, ok := qs.findQuad(d.Quad); ok {
+			// 	qs.Delete(id)
+			// }
 		default:
 			// TODO: ideally we should rollback it
 			return &graph.DeltaError{Delta: d, Err: graph.ErrInvalidAction}
 		}
-
-		if d.Epoch > qs.syncedEpoch {
-			qs.syncedEpoch = d.Epoch
-		}
 	}
-	qs.horizon++ // TODO: what for?
+	if epoch > 0 {
+		qs.epoch = epoch
+	}
+	qs.horizon++ //
 	return nil
 }
 
@@ -586,7 +568,7 @@ func (qs *QuadStore) Stats(ctx context.Context, exact bool) (graph.Stats, error)
 			Value: int64(len(qs.quads)),
 			Exact: true,
 		},
-		Epoch: qs.syncedEpoch,
+		Epoch: qs.epoch,
 	}, nil
 }
 

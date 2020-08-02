@@ -94,7 +94,7 @@ type QuadStore interface {
 
 	// The only way in is through building a transaction, which
 	// is done by a replication strategy.
-	ApplyDeltas(in []Delta, opts IgnoreOpts) error
+	ApplyDeltas(epoch int64, in []Delta, opts IgnoreOpts) error
 
 	// NewQuadWriter starts a batch quad import process.
 	// The order of changes is not guaranteed, neither is the order and result of concurrent ApplyDeltas.

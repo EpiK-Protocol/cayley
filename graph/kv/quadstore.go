@@ -84,7 +84,7 @@ func Register(name string, r Registration) {
 }
 
 const (
-	latestDataVersion   = 2
+	latestDataVersion   = 1
 	envKVDefaultIndexes = "GATEWAY_KV_INDEXES"
 )
 
@@ -237,6 +237,10 @@ func (qs *QuadStore) Stats(ctx context.Context, exact bool) (graph.Stats, error)
 	if err != nil {
 		return graph.Stats{}, err
 	}
+	epoch, err := qs.getMetaInt(ctx, "epoch")
+	if err != nil {
+		return graph.Stats{}, err
+	}
 	st := graph.Stats{
 		Nodes: refs.Size{
 			Value: sz / 3,
@@ -246,6 +250,7 @@ func (qs *QuadStore) Stats(ctx context.Context, exact bool) (graph.Stats, error)
 			Value: sz,
 			Exact: true,
 		},
+		Epoch: epoch,
 	}
 	if exact {
 		// calculate the exact number of nodes

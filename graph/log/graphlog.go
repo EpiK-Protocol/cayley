@@ -136,3 +136,47 @@ func SplitDeltas(in []graph.Delta) *Deltas {
 		QuadAdd: quadAdd, QuadDel: quadDel,
 	}
 }
+
+func SplitEpikDeltas(in []graph.Delta) *Deltas {
+	hnodes := make(map[refs.ValueHash]*NodeUpdate, len(in)*2)
+	quadAdd := make([]QuadUpdate, 0, len(in))
+	quadDel := make([]QuadUpdate, 0, len(in)/2)
+	for i, d := range in {
+		switch d.Action {
+		case graph.Add:
+			var q refs.QuadHash
+			for _, dir := range quad.Directions {
+				v := d.Quad.Get(dir)
+				if v == nil {
+					continue
+				}
+				h := refs.HashOf(v)
+				q.Set(dir, h)
+				n := hnodes[h]
+				if n == nil {
+					n = &NodeUpdate{Hash: h, Val: v}
+					hnodes[h] = n
+				}
+				n.RefInc++
+			}
+			quadAdd = append(quadAdd, QuadUpdate{Ind: i, Quad: q})
+		case graph.Delete:
+			quadDel = append(quadDel, QuadUpdate{Ind: i, Del: true})
+		default:
+			panic("unknown action")
+		}
+	}
+	incNodes := make([]NodeUpdate, 0, len(hnodes))
+	for _, n := range hnodes {
+		incNodes = append(incNodes, *n)
+	}
+	sort.Slice(incNodes, func(i, j int) bool {
+		return bytes.Compare(incNodes[i].Hash[:], incNodes[j].Hash[:]) < 0
+	})
+	hnodes = nil
+	return &Deltas{
+		IncNode: incNodes,
+		QuadAdd: quadAdd,
+		QuadDel: quadDel,
+	}
+}

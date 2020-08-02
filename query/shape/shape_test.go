@@ -49,7 +49,7 @@ func (qs ValLookup) ValueOf(v quad.Value) refs.Ref {
 func (ValLookup) NewQuadWriter() (quad.WriteCloser, error) {
 	panic("not implemented")
 }
-func (ValLookup) ApplyDeltas(_ []graph.Delta, _ graph.IgnoreOpts) error {
+func (ValLookup) ApplyDeltas(_ int64, _ []graph.Delta, _ graph.IgnoreOpts) error {
 	panic("not implemented")
 }
 func (ValLookup) Quad(_ refs.Ref) quad.Quad {

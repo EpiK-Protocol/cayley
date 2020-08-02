@@ -10,14 +10,10 @@ import (
 	"github.com/cayleygraph/quad/nquads"
 	"github.com/epik-protocol/gateway/clog"
 	"github.com/epik-protocol/gateway/graph"
-	"github.com/ipfs/go-cid"
-	"github.com/spf13/viper"
 )
 
 const (
-	SyncerType = "epik"
-
-	keyEpikAddr = "epik.address"
+	ListenerType = "epik"
 
 	syncDuration = 30 * time.Second
 
@@ -25,14 +21,14 @@ const (
 )
 
 func init() {
-	graph.RegisterSyncer(SyncerType, graph.SyncerRegistration{
-		NewSyncerFunc: func(store graph.QuadStore) (graph.Syncer, error) {
-			return newSyncer(store)
+	graph.RegisterListener(ListenerType, graph.ListenerRegistration{
+		NewListenerFunc: func(store graph.QuadStore) (graph.Listener, error) {
+			return newListener(store)
 		},
 	})
 }
 
-type Syncer struct {
+type Listener struct {
 	quit  chan struct{}
 	start sync.Once
 	wg    sync.WaitGroup
@@ -41,28 +37,28 @@ type Syncer struct {
 	store  graph.QuadStore
 }
 
-func newSyncer(store graph.QuadStore) (*Syncer, error) {
+func newListener(store graph.QuadStore) (*Listener, error) {
 
-	return &Syncer{
+	return &Listener{
 		quit:  make(chan struct{}),
 		store: store,
 	}, nil
 }
 
-func (s *Syncer) Start() {
+func (s *Listener) Start() {
 	s.start.Do(func() {
 		s.wg.Add(1)
-		go s.startSyncer()
+		go s.listen()
 	})
 }
 
-func (s *Syncer) startSyncer() {
+func (s *Listener) listen() {
 	var (
 		err    error
 		close  func()
 		ticker = time.NewTicker(syncDuration)
 	)
-	s.client, close, err = NewEpikClient(viper.GetString(keyEpikAddr), makeRequestHeader())
+	s.client, close, err = NewEpikClient()
 	if err != nil {
 		clog.Fatalf("failed to init epik client: %v", err)
 	}
@@ -94,20 +90,19 @@ func (s *Syncer) startSyncer() {
 				continue
 			}
 
-			if err = s.doSync(local.Epoch+1, remote); err != nil {
+			if err = s.syncDeltas(local.Epoch+1, remote); err != nil {
 				clog.Errorf("failed to sync epick from %d to %d, error is: %v", local.Epoch+1, remote, err)
 			}
 		}
 	}
 }
 
-func (s *Syncer) Stop() {
+func (s *Listener) Stop() {
 	close(s.quit)
 	s.wg.Wait()
 }
 
-// TODO: does chain selection matters?
-func (s *Syncer) doSync(current, end int64) error {
+func (s *Listener) syncDeltas(current, end int64) error {
 	for ; current <= end; current++ {
 		select {
 		case <-s.quit:
@@ -115,37 +110,34 @@ func (s *Syncer) doSync(current, end int64) error {
 		default:
 		}
 
-		adds, deletes, err := s.client.GetChange(context.TODO(), current)
+		msgs, err := s.client.GetMessages(context.TODO(), current)
 		if err != nil {
 			clog.Errorf("failed to get change at epoch %d, error is: %v", current, err)
 			return err
 		}
 
-		// process delete
-		procDels, err := parseDeletes(current, deletes)
+		// delete
+		deltas, err := parseDeletes(msgs.Deletes)
 		if err != nil {
 			clog.Errorf("failed to parse deleted cids at epoch %d, error is: %v", current, err)
 			return err
 		}
-		if err = s.store.ApplyDeltas(procDels, graph.IgnoreOpts{IgnoreMissing: true}); err != nil {
-			clog.Errorf("failed to apply deletes at epoch %d, error is: %v", current, err)
-			return err
-		}
 
-		// process add
-		m, err := s.client.GetObjects(context.TODO(), adds)
+		// add
+		objs, err := s.client.GetObjects(context.TODO(), msgs.Adds)
 		if err != nil {
 			clog.Errorf("failed to get objects at epoch %d, error is: %v", current, err)
 			return err
 		}
 
-		procAdds, err := parseAdds(current, m)
+		adds, err := parseAdds(objs)
 		if err != nil {
 			clog.Errorf("failed to parse added cids at epoch %d, error is: %v", current, err)
 			return err
 		}
 
-		if err = s.store.ApplyDeltas(procAdds, graph.IgnoreOpts{IgnoreDup: true}); err != nil {
+		deltas = append(deltas, adds...)
+		if err = s.store.ApplyDeltas(current, deltas, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true}); err != nil {
 			clog.Errorf("failed to apply adds at epoch %d, error is: %v", current, err)
 			return err
 		}
@@ -153,22 +145,28 @@ func (s *Syncer) doSync(current, end int64) error {
 	return nil
 }
 
-func parseDeletes(epoch int64, ids []cid.Cid) ([]graph.Delta, error) {
-	deltas := make([]graph.Delta, 0, len(ids))
-	for _, id := range ids {
+func parseDeletes(cids []string) ([]graph.Delta, error) {
+	deltas := make([]graph.Delta, 0, len(cids))
+	for _, cid := range cids {
+		if len(cid) == 0 {
+			return nil, graph.ErrCidMissing
+		}
 		deltas = append(deltas, graph.Delta{
-			Cid:    id.String(),
+			Cid:    cid,
 			Action: graph.Delete,
-			Epoch:  epoch,
 		})
 	}
 	return deltas, nil
 }
 
-func parseAdds(epoch int64, m map[cid.Cid][]byte) ([]graph.Delta, error) {
+// map value maybe empty for expiration
+func parseAdds(m map[string][]byte) ([]graph.Delta, error) {
 	deltas := make([]graph.Delta, 0, len(m))
-	for id, data := range m {
-		// See load.go:83
+	for cid, data := range m {
+		if len(cid) == 0 {
+			return nil, graph.ErrCidMissing
+		}
+		// load.go:83
 		qr := nquads.NewReader(bytes.NewReader(data), false)
 		for {
 			q, err := qr.ReadQuad()
@@ -180,10 +178,9 @@ func parseAdds(epoch int64, m map[cid.Cid][]byte) ([]graph.Delta, error) {
 				return nil, err
 			}
 			deltas = append(deltas, graph.Delta{
-				Cid:    id.String(),
+				Cid:    cid,
 				Quad:   q,
 				Action: graph.Add,
-				Epoch:  epoch,
 			})
 		}
 		qr.Close()

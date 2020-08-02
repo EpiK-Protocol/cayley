@@ -51,7 +51,6 @@ const (
 
 type Delta struct {
 	Cid    string
-	Epoch  int64
 	Quad   quad.Quad
 	Action Procedure
 }
@@ -68,7 +67,7 @@ func Unwrap(qs QuadStore) QuadStore {
 type Handle struct {
 	QuadStore
 	QuadWriter
-	Syncer
+	Listener
 }
 
 type IgnoreOpts struct {
@@ -77,16 +76,18 @@ type IgnoreOpts struct {
 
 func (h *Handle) Close() error {
 	err := h.QuadWriter.Close()
-	h.Syncer.Stop()
+	h.Listener.Stop()
 	h.QuadStore.Close()
 	return err
 }
 
 var (
-	ErrQuadExists    = errors.New("quad exists")
-	ErrQuadNotExist  = errors.New("quad does not exist")
-	ErrInvalidAction = errors.New("invalid action")
-	ErrNodeNotExists = errors.New("node does not exist")
+	ErrQuadExists        = errors.New("quad exists")
+	ErrQuadNotExist      = errors.New("quad does not exist")
+	ErrQuadIndexNotExist = errors.New("quad index does not exist")
+	ErrCidMissing        = errors.New("cid is missing")
+	ErrInvalidAction     = errors.New("invalid action")
+	ErrNodeNotExists     = errors.New("node does not exist")
 )
 
 // DeltaError records an error and the delta that caused it.
