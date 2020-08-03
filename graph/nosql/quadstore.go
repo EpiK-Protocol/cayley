@@ -358,7 +358,7 @@ func (w *quadWriter) WriteQuads(buf []quad.Quad) (int, error) {
 			Quad: q, Action: graph.Add,
 		})
 	}
-	err := w.qs.ApplyDeltas(0, w.deltas, graph.IgnoreOpts{
+	err := w.qs.ApplyDeltas(graph.NoCidEpoch, w.deltas, graph.IgnoreOpts{
 		IgnoreDup: true,
 	})
 	w.deltas = w.deltas[:0]

@@ -296,7 +296,7 @@ func TestLoadDupRaw(t testing.TB, gen testutil.DatabaseFunc, c *Config) {
 		"context",
 	)
 
-	err := qs.ApplyDeltas(0, []graph.Delta{
+	err := qs.ApplyDeltas(graph.NoCidEpoch, []graph.Delta{
 		{Quad: q, Action: graph.Add},
 		{Quad: q, Action: graph.Add},
 	}, graph.IgnoreOpts{IgnoreDup: true})

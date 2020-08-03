@@ -149,7 +149,7 @@ func parseDeletes(cids []string) ([]graph.Delta, error) {
 	deltas := make([]graph.Delta, 0, len(cids))
 	for _, cid := range cids {
 		if len(cid) == 0 {
-			return nil, graph.ErrCidMissing
+			return nil, graph.ErrInvalidCid
 		}
 		deltas = append(deltas, graph.Delta{
 			Cid:    cid,
@@ -164,7 +164,7 @@ func parseAdds(m map[string][]byte) ([]graph.Delta, error) {
 	deltas := make([]graph.Delta, 0, len(m))
 	for cid, data := range m {
 		if len(cid) == 0 {
-			return nil, graph.ErrCidMissing
+			return nil, graph.ErrInvalidCid
 		}
 		// load.go:83
 		qr := nquads.NewReader(bytes.NewReader(data), false)

@@ -49,6 +49,10 @@ const (
 	Delete Procedure = -1
 )
 
+const (
+	NoCidEpoch = int64(0)
+)
+
 type Delta struct {
 	Cid    string
 	Quad   quad.Quad
@@ -85,7 +89,7 @@ var (
 	ErrQuadExists        = errors.New("quad exists")
 	ErrQuadNotExist      = errors.New("quad does not exist")
 	ErrQuadIndexNotExist = errors.New("quad index does not exist")
-	ErrCidMissing        = errors.New("cid is missing")
+	ErrInvalidCid        = errors.New("invalid cid")
 	ErrInvalidAction     = errors.New("invalid action")
 	ErrNodeNotExists     = errors.New("node does not exist")
 )

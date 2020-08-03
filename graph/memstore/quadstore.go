@@ -441,12 +441,15 @@ func (qs *QuadStore) findQuad(q quad.Quad) (int64, internalQuad, bool) {
 }
 
 func (qs *QuadStore) ApplyDeltas(epoch int64, deltas []graph.Delta, ignoreOpts graph.IgnoreOpts) error {
+	for _, d := range deltas {
+		if (epoch != graph.NoCidEpoch && len(d.Cid) == 0) ||
+			(epoch == graph.NoCidEpoch && len(d.Cid) > 0) {
+			return &graph.DeltaError{Delta: d, Err: graph.ErrInvalidCid}
+		}
+	}
 	// Precheck the whole transaction (if required)
 	if !ignoreOpts.IgnoreDup || !ignoreOpts.IgnoreMissing {
 		for _, d := range deltas {
-			if len(d.Cid) == 0 {
-				return &graph.DeltaError{Delta: d, Err: graph.ErrCidMissing}
-			}
 			switch d.Action {
 			case graph.Add:
 				if !ignoreOpts.IgnoreDup {
@@ -456,11 +459,12 @@ func (qs *QuadStore) ApplyDeltas(epoch int64, deltas []graph.Delta, ignoreOpts g
 				}
 			case graph.Delete:
 				if !ignoreOpts.IgnoreMissing {
-					if _, _, ok := qs.findQuad(d.Quad); !ok {
+					if len(d.Cid) > 0 {
+						if _, ok := qs.cqIndex.Get(d.Cid); !ok {
+							return &graph.DeltaError{Delta: d, Err: graph.ErrQuadIndexNotExist}
+						}
+					} else if _, _, ok := qs.findQuad(d.Quad); !ok {
 						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadNotExist}
-					}
-					if _, ok := qs.cqIndex.Get(d.Cid); !ok {
-						return &graph.DeltaError{Delta: d, Err: graph.ErrQuadIndexNotExist}
 					}
 				}
 			default:
@@ -470,23 +474,21 @@ func (qs *QuadStore) ApplyDeltas(epoch int64, deltas []graph.Delta, ignoreOpts g
 	}
 
 	for _, d := range deltas {
-		if len(d.Cid) == 0 {
-			return &graph.DeltaError{Delta: d, Err: graph.ErrCidMissing}
-		}
 		switch d.Action {
 		case graph.Add:
-			id, succ := qs.AddQuad(d.Quad)
-			if succ {
+			id, _ := qs.AddQuad(d.Quad)
+			if len(d.Cid) > 0 {
 				qs.cqIndex.Add(d.Cid, id)
 			}
 		case graph.Delete:
-			if id, ok := qs.cqIndex.Get(d.Cid); ok {
+			if len(d.Cid) > 0 {
+				if id, ok := qs.cqIndex.Get(d.Cid); ok {
+					qs.Delete(id)
+					qs.cqIndex.Delete(d.Cid)
+				}
+			} else if id, _, ok := qs.findQuad(d.Quad); ok {
 				qs.Delete(id)
-				qs.cqIndex.Delete(d.Cid)
 			}
-			// if id, _, ok := qs.findQuad(d.Quad); ok {
-			// 	qs.Delete(id)
-			// }
 		default:
 			// TODO: ideally we should rollback it
 			return &graph.DeltaError{Delta: d, Err: graph.ErrInvalidAction}

@@ -18,6 +18,7 @@ import "github.com/cayleygraph/quad"
 
 // Transaction stores a bunch of Deltas to apply together in an atomic step on the database.
 type Transaction struct {
+	Epoch int64
 	// Deltas stores the deltas in the right order
 	Deltas []Delta
 	// deltas stores the deltas in a map to avoid duplications

@@ -58,7 +58,7 @@ func (s *Single) AddQuad(q quad.Quad) error {
 		Quad:   q,
 		Action: graph.Add,
 	}
-	return s.qs.ApplyDeltas(0, deltas, s.ignoreOpts)
+	return s.qs.ApplyDeltas(graph.NoCidEpoch, deltas, s.ignoreOpts)
 }
 
 func (s *Single) AddQuadSet(set []quad.Quad) error {
@@ -66,7 +66,7 @@ func (s *Single) AddQuadSet(set []quad.Quad) error {
 	for _, q := range set {
 		tx.AddQuad(q)
 	}
-	return s.qs.ApplyDeltas(0, tx.Deltas, s.ignoreOpts)
+	return s.qs.ApplyDeltas(graph.NoCidEpoch, tx.Deltas, s.ignoreOpts)
 }
 
 func (s *Single) RemoveQuad(q quad.Quad) error {
@@ -75,7 +75,7 @@ func (s *Single) RemoveQuad(q quad.Quad) error {
 		Quad:   q,
 		Action: graph.Delete,
 	}
-	return s.qs.ApplyDeltas(0, deltas, s.ignoreOpts)
+	return s.qs.ApplyDeltas(graph.NoCidEpoch, deltas, s.ignoreOpts)
 }
 
 // RemoveNode removes all quads with the given value.
@@ -115,5 +115,5 @@ func (s *Single) Close() error {
 }
 
 func (s *Single) ApplyTransaction(t *graph.Transaction) error {
-	return s.qs.ApplyDeltas(0, t.Deltas, s.ignoreOpts)
+	return s.qs.ApplyDeltas(t.Epoch, t.Deltas, s.ignoreOpts)
 }

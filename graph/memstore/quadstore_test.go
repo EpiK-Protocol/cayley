@@ -251,3 +251,94 @@ func TestTransaction(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, st, st2, "Appended a new quad in a failed transaction")
 }
+
+func TestApplyDeltas(t *testing.T) {
+
+	var epoch1Deltas = []graph.Delta{
+		{ // duplicated quad
+			Cid:    "e6e5b003b3ce13d939e6",
+			Quad:   quad.MakeRaw("A", "follows", "B", ""),
+			Action: graph.Add,
+		},
+		{ // new quad
+			Cid:    "5ea85b3acc794d9ed651",
+			Quad:   quad.MakeRaw("A", "follows", "C", ""),
+			Action: graph.Add,
+		},
+	}
+
+	qs, _, _ := makeTestStore(simpleGraph)
+	exp := graph.Stats{
+		Nodes: refs.Size{Value: 11, Exact: true},
+		Quads: refs.Size{Value: 11, Exact: true},
+	}
+	st, err := qs.Stats(context.Background(), true)
+	require.NoError(t, err)
+	require.Equal(t, exp, st, "Unexpected quadstore size")
+	require.Equal(t, len(qs.cqIndex.index), 0)
+
+	err = qs.ApplyDeltas(0, epoch1Deltas, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	rerr := err.(*graph.DeltaError)
+	require.EqualError(t, rerr.Err, graph.ErrInvalidCid.Error())
+
+	// add epoch1Deltas
+	err = qs.ApplyDeltas(1, epoch1Deltas, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	require.NoError(t, err)
+	exp.Quads.Value = 12
+	exp.Epoch = 1
+	st, err = qs.Stats(context.Background(), true)
+	require.NoError(t, err)
+	require.Equal(t, exp, st, "Unexpected quadstore size")
+	require.Equal(t, len(qs.cqIndex.index), len(epoch1Deltas))
+
+	// delete by cid ---- epoch1Deltas[1]
+	err = qs.ApplyDeltas(1, []graph.Delta{
+		{
+			Cid:    epoch1Deltas[1].Cid,
+			Action: graph.Delete,
+		},
+	}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	require.NoError(t, err)
+	require.Equal(t, len(qs.cqIndex.index), 1)
+	_, ok := qs.cqIndex.index[epoch1Deltas[0].Cid]
+	require.True(t, ok, "Unexpected cid")
+
+	exp.Quads.Value = 11
+	st, err = qs.Stats(context.Background(), true)
+	require.NoError(t, err)
+	require.Equal(t, exp, st, "Unexpected quadstore size")
+
+	// delete by quad, same with epoch1Deltas[0]
+	err = qs.ApplyDeltas(0, []graph.Delta{
+		{
+			Quad:   simpleGraph[0],
+			Action: graph.Delete,
+		},
+	}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	require.NoError(t, err)
+	exp = graph.Stats{
+		Nodes: refs.Size{Value: 10, Exact: true}, // "A" removed
+		Quads: refs.Size{Value: 10, Exact: true}, // simpleGraph[0] removed
+		Epoch: 1,
+	}
+	st, err = qs.Stats(context.Background(), true)
+	require.NoError(t, err)
+	require.Equal(t, exp, st, "Unexpected quadstore size")
+	require.Equal(t, len(qs.cqIndex.index), 1)
+	_, ok = qs.cqIndex.index[epoch1Deltas[0].Cid]
+	require.True(t, ok, "Unexpected cid")
+
+	// delete invalid cid index
+	err = qs.ApplyDeltas(2, []graph.Delta{
+		{
+			Cid:    epoch1Deltas[0].Cid,
+			Action: graph.Delete,
+		},
+	}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: false})
+	require.NoError(t, err)
+	require.Equal(t, len(qs.cqIndex.index), 0)
+	exp.Epoch = 2
+	st, err = qs.Stats(context.Background(), true)
+	require.NoError(t, err)
+	require.Equal(t, exp, st, "Unexpected quadstore size")
+}
