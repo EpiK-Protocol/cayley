@@ -64,11 +64,13 @@ func le(v uint64) []byte {
 const (
 	bMeta = "meta"
 	bLog  = "log"
+	bCid  = "cid"
 )
 
 var (
-	kVers = []byte("version")
-	vVers = le(2)
+	kEpoch = []byte("epoch")
+	kVers  = []byte("version")
+	vVers  = le(1)
 
 	vAuto = []byte("auto")
 
@@ -132,9 +134,11 @@ func TestApplyDeltas(t *testing.T) {
 		{opGet, key(bMeta, kVers), nil, hkv.ErrNotFound},
 		{opPut, key(bMeta, []byte{}), nil, nil},
 		{opPut, key(bLog, []byte{}), nil, nil},
+		{opPut, key(bCid, []byte{}), nil, nil},
 		{opPut, key("sp", []byte{}), nil, nil},
 		{opPut, key("ops", []byte{}), nil, nil},
 		{opPut, key(bMeta, kVers), vVers, nil},
+		{opPut, key(bMeta, kEpoch), le(0), nil},
 		{opPut, key(bMeta, kIndexes), []byte(`[{"dirs":"AQI=","unique":false},{"dirs":"AwIB","unique":false}]`), nil},
 	})
 
@@ -365,4 +369,208 @@ func (h txHook) Del(k hkv.Key) error {
 
 func (h txHook) Scan(pref hkv.Key) hkv.Iterator {
 	return h.tx.Scan(pref)
+}
+
+func TestApplyEpikDeltas(t *testing.T) {
+
+	var deltas = []graph.Delta{
+		{
+			// Cid:    "e6e5b003b3ce13d939e6",
+			Quad:   quad.MakeIRI("a", "b", "c", ""),
+			Action: graph.Add,
+		},
+		{
+			Cid:    "5ea85b3acc794d9ed651",
+			Quad:   quad.MakeIRI("a", "b", "e", ""),
+			Action: graph.Add,
+		},
+		{ // delete by quad - deltas[0]
+			Quad:   quad.MakeIRI("a", "b", "c", ""),
+			Action: graph.Delete,
+		},
+		{ // delete by cid - deltas[1]
+			Cid:    "5ea85b3acc794d9ed651",
+			Action: graph.Delete,
+		},
+		{ // delete by cid - not exist
+			Cid:    "non-existence",
+			Action: graph.Delete,
+		},
+		{ // delete by quad - not exist
+			Quad:   quad.MakeIRI("a", "e", "b", ""),
+			Action: graph.Delete,
+		},
+	}
+
+	kdb := btree.New()
+
+	hook := &kvHook{db: kdb}
+	expect := func(exp Ops) {
+		got := hook.log()
+		if len(exp) == len(got) {
+			if false {
+				sortByOp(exp, got)
+			}
+			// TODO: make node insert predictable
+			for i, d := range exp {
+				if bytes.Equal(d.key[0], vAuto) {
+					exp[i].key = got[i].key
+				}
+				if bytes.Equal(d.val, vAuto) {
+					exp[i].val = got[i].val
+				}
+			}
+		}
+		require.Equal(t, exp, got, "%d\n%v\nvs\n\n%d\n%v", len(exp), exp, len(got), got)
+	}
+
+	err := kv.Init(hook, nil)
+	require.NoError(t, err)
+
+	expect(Ops{
+		{opGet, key(bMeta, kVers), nil, hkv.ErrNotFound},
+		{opPut, key(bMeta, []byte{}), nil, nil},
+		{opPut, key(bLog, []byte{}), nil, nil},
+		{opPut, key(bCid, []byte{}), nil, nil},
+		{opPut, key("sp", []byte{}), nil, nil},
+		{opPut, key("ops", []byte{}), nil, nil},
+		{opPut, key(bMeta, kVers), vVers, nil},
+		{opPut, key(bMeta, kEpoch), le(0), nil},
+		{opPut, key(bMeta, kIndexes), []byte(`[{"dirs":"AQI=","unique":false},{"dirs":"AwIB","unique":false}]`), nil},
+	})
+
+	qs, err := kv.New(hook, nil)
+	require.NoError(t, err)
+	defer qs.Close()
+
+	expect(Ops{
+		{opGet, key(bMeta, kVers), vVers, nil},
+		{opGet, key(bMeta, kIndexes), []byte(`[{"dirs":"AQI=","unique":false},{"dirs":"AwIB","unique":false}]`), nil},
+		{opGet, key(bMeta, []byte("size")), nil, hkv.ErrNotFound},
+	})
+
+	// add deltas[0]
+	err = qs.ApplyDeltas(1, []graph.Delta{deltas[0]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	require.NoError(t, err)
+
+	expect(Ops{
+		{opGet, key(bMeta, []byte("horizon")), nil, hkv.ErrNotFound},
+		{opPut, key(bMeta, []byte("horizon")), le(3), nil},
+
+		{opPut, key(irib("a"), irih("a")), vAuto, nil},
+		{opPut, key(bLog, be(1)), vAuto, nil},
+		{opPut, key(irib("b"), irih("b")), vAuto, nil},
+		{opPut, key(bLog, be(2)), vAuto, nil},
+		{opPut, key(irib("c"), irih("c")), vAuto, nil},
+		{opPut, key(bLog, be(3)), vAuto, nil},
+
+		{opPut, key(iric("a"), irih("a")), hex("01"), nil},
+		{opPut, key(iric("b"), irih("b")), hex("01"), nil},
+		{opPut, key(iric("c"), irih("c")), hex("01"), nil},
+		{opGet, key(bMeta, []byte("horizon")), le(3), nil},
+		{opPut, key(bMeta, []byte("horizon")), le(4), nil},
+		{opPut, key(bLog, be(4)), vAuto, nil},
+		// {opPut, key(bCid, []byte(deltas[0].Cid)), le(4), nil},
+		{opGet, key(bMeta, []byte("size")), nil, hkv.ErrNotFound},
+		{opPut, key(bMeta, []byte("size")), le(1), nil},
+		{opPut, key("ops", be(3, 2, 1)), hex("04"), nil},
+		{opPut, key("sp", be(1, 2)), hex("04"), nil},
+		{opPut, key(bMeta, kEpoch), le(1), nil},
+	})
+
+	// add deltas[1]
+	err = qs.ApplyDeltas(2, []graph.Delta{deltas[1]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	require.NoError(t, err)
+
+	expect(Ops{
+		// served from IRI cache
+		//{opGet, irib("a"), irih("a"), vAuto, nil},
+		//{opGet, irib("b"), irih("b"), vAuto, nil},
+		{opGet, key(bMeta, []byte("horizon")), le(4), nil},
+		{opPut, key(bMeta, []byte("horizon")), le(5), nil},
+
+		{opPut, key(irib("e"), irih("e")), vAuto, nil},
+		{opPut, key(bLog, be(5)), vAuto, nil},
+
+		{opGet, key(iric("a"), irih("a")), hex("01"), nil},
+		{opGet, key(iric("b"), irih("b")), hex("01"), nil},
+		{opPut, key(iric("a"), irih("a")), hex("02"), nil},
+		{opPut, key(iric("b"), irih("b")), hex("02"), nil},
+		{opPut, key(iric("e"), irih("e")), hex("01"), nil},
+		{opGet, key(bMeta, []byte("horizon")), le(5), nil},
+		{opPut, key(bMeta, []byte("horizon")), le(6), nil},
+		{opPut, key(bLog, be(6)), vAuto, nil},
+		{opPut, key(bCid, []byte(deltas[1].Cid)), le(6), nil},
+		{opGet, key(bMeta, []byte("size")), le(1), nil},
+		{opPut, key(bMeta, []byte("size")), le(2), nil},
+		{opPut, key("ops", be(5, 2, 1)), hex("06"), nil},
+		{opGet, key("sp", be(1, 2)), hex("04"), nil},
+		{opPut, key("sp", be(1, 2)), hex("0406"), nil},
+		{opPut, key(bMeta, kEpoch), le(2), nil},
+	})
+
+	// delete deltas[4] - by not-existence cid
+	err = qs.ApplyDeltas(2, []graph.Delta{deltas[4]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	expect(Ops{
+		{opGet, key(bCid, []byte(deltas[4].Cid)), nil, hkv.ErrNotFound},
+		{opPut, key(bMeta, kEpoch), le(2), nil},
+	})
+	require.NoError(t, err)
+
+	// delete deltas[5] - by not-existence quad
+	err = qs.ApplyDeltas(2, []graph.Delta{deltas[5]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	expect(Ops{
+		{opPut, key(bMeta, kEpoch), le(2), nil},
+	})
+	require.NoError(t, err)
+
+	// delete deltas[2] - by quad
+	err = qs.ApplyDeltas(2, []graph.Delta{deltas[2]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	expect(Ops{
+		{opGet, key("sp", be(1, 2)), hex("0406"), nil},
+		{opGet, key("ops", be(3, 2, 1)), hex("04"), nil},
+		{opGet, key(bLog, be(4)), vAuto, nil},
+		{opPut, key(bLog, be(4)), vAuto, nil},
+		{opGet, key(bMeta, []byte("size")), le(2), nil},
+		{opPut, key(bMeta, []byte("size")), le(1), nil},
+		{opGet, key(iric("a"), irih("a")), hex("02"), nil},
+		{opGet, key(iric("b"), irih("b")), hex("02"), nil},
+		{opGet, key(iric("c"), irih("c")), hex("01"), nil},
+		{opPut, key(iric("a"), irih("a")), hex("01"), nil},
+		{opPut, key(iric("b"), irih("b")), hex("01"), nil},
+		{opDel, key(iric("c"), irih("c")), nil, nil},
+		{opDel, key(irib("c"), irih("c")), nil, nil},
+		{opDel, key(bLog, be(3)), nil, nil},
+		{opPut, key(bMeta, kEpoch), le(2), nil},
+	})
+	require.NoError(t, err)
+
+	// delete deltas[3] - by cid
+	err = qs.ApplyDeltas(3, []graph.Delta{deltas[3]}, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true})
+	expect(Ops{
+		{opGet, key(bCid, []byte(deltas[3].Cid)), le(6), nil},
+		{opGet, key(bLog, be(6)), vAuto, nil},
+		{opGet, key(bLog, be(1)), vAuto, nil},
+		{opGet, key(bLog, be(2)), vAuto, nil},
+		{opGet, key(bLog, be(5)), vAuto, nil},
+		{opPut, key(bLog, be(6)), vAuto, nil},
+		{opGet, key(bMeta, []byte("size")), le(1), nil},
+		{opPut, key(bMeta, []byte("size")), le(0), nil},
+		{opDel, key(bCid, []byte(deltas[3].Cid)), nil, nil},
+		{opGet, key(iric("e"), irih("e")), hex("01"), nil},
+		{opGet, key(iric("a"), irih("a")), hex("01"), nil},
+		{opGet, key(iric("b"), irih("b")), hex("01"), nil},
+		{opDel, key(iric("e"), irih("e")), nil, nil},
+		{opDel, key(iric("a"), irih("a")), nil, nil},
+		{opDel, key(iric("b"), irih("b")), nil, nil},
+
+		{opDel, key(irib("e"), irih("e")), nil, nil},
+		{opDel, key(bLog, be(5)), nil, nil},
+		{opDel, key(irib("a"), irih("a")), nil, nil},
+		{opDel, key(bLog, be(1)), nil, nil},
+		{opDel, key(irib("b"), irih("b")), nil, nil},
+		{opDel, key(bLog, be(2)), nil, nil},
+		{opPut, key(bMeta, kEpoch), le(3), nil},
+	})
+	require.NoError(t, err)
 }

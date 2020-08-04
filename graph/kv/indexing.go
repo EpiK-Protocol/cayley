@@ -41,7 +41,7 @@ import (
 var (
 	metaBucket = kv.Key{[]byte("meta")}
 	logIndex   = kv.Key{[]byte("log")}
-	cidToLog   = kv.Key{[]byte("cid")}
+	cidIndex   = kv.Key{[]byte("cid")}
 
 	keyMetaIndexes = metaBucket.AppendBytes([]byte("indexes"))
 
@@ -49,7 +49,7 @@ var (
 	buckets = []kv.Key{
 		metaBucket,
 		logIndex,
-		cidToLog,
+		cidIndex,
 	}
 
 	DefaultQuadIndexes = []QuadIndex{
@@ -573,13 +573,12 @@ func (qs *QuadStore) ApplyDeltas(epoch int64, in []graph.Delta, ignoreOpts graph
 	defer tx.Close()
 	tx = wrapTx(tx)
 
-	deltas := graphlog.SplitEpikDeltas(in)
+	deltas := graphlog.SplitDeltas(in)
 	if len(deltas.QuadDel) != 0 || len(deltas.DecNode) != 0 {
 		qs.mapNodes = nil
 	}
 
-	// nodes, err := qs.applyAddDeltas(tx, in, deltas, ignoreOpts)
-	_, err = qs.applyAddDeltas(tx, in, deltas, ignoreOpts)
+	nodes, err := qs.applyAddDeltas(tx, in, deltas, ignoreOpts)
 	if err != nil {
 		return err
 	}
@@ -587,113 +586,135 @@ func (qs *QuadStore) ApplyDeltas(epoch int64, in []graph.Delta, ignoreOpts graph
 	if len(deltas.QuadDel) != 0 || len(deltas.DecNode) != 0 {
 		links := make([]proto.Primitive, 0, len(deltas.QuadDel))
 		cids := make([]string, 0, len(deltas.QuadDel))
-		dnodes := make(map[refs.ValueHash]uint64)
 		decNodes := make(map[uint64]*graphlog.NodeUpdate)
-		// // resolve all nodes that will be removed
-		// dnodes := make(map[refs.ValueHash]uint64, len(deltas.DecNode))
-		// if err := qs.resolveValDeltas(ctx, tx, deltas.DecNode, func(i int, id uint64) {
-		// 	dnodes[deltas.DecNode[i].Hash] = id
-		// }); err != nil {
-		// 	return err
-		// }
 
-		// // check for existence and delete quads
-		// fixNodes := make(map[refs.ValueHash]int)
+		// resolve all nodes that will be removed
+		dnodes := make(map[refs.ValueHash]uint64, len(deltas.DecNode))
+		if err := qs.resolveValDeltas(ctx, tx, deltas.DecNode, func(i int, id uint64) {
+			dnodes[deltas.DecNode[i].Hash] = id
+		}); err != nil {
+			return err
+		}
+
+		// check for existence and delete quads
+		fixNodes := make(map[refs.ValueHash]int)
 		for _, q := range deltas.QuadDel {
-			link, err := qs.getPrimitiveByCid(ctx, tx, in[q.Ind].Cid)
-			if err != nil && err != kv.ErrNotFound {
-				return err
+			var link proto.Primitive
+			exists := true
+			byCid := len(in[q.Ind].Cid) > 0
+			if byCid {
+				l, err := qs.getPrimitiveByCid(ctx, tx, in[q.Ind].Cid)
+				if err != nil && err != kv.ErrNotFound {
+					return err
+				}
+				if l != nil {
+					link = *l
+				} else {
+					exists = false
+				}
+			} else {
+				// resolve values of all quad directions
+				// if any of the direction does not exists, the quad does not exists as well
+				for _, dir := range quad.Directions {
+					h := q.Quad.Get(dir)
+					n, ok := nodes[h]
+					if !ok {
+						var id uint64
+						id, ok = dnodes[h]
+						n.ID = id
+					}
+					if !ok {
+						exists = exists && !h.Valid()
+						continue
+					}
+					link.SetDirection(dir, n.ID)
+				}
+				if exists {
+					p, err := qs.hasPrimitive(ctx, tx, &link, true)
+					if err != nil {
+						return err
+					} else if p == nil || p.Deleted {
+						exists = false
+					} else {
+						link = *p
+					}
+				}
 			}
-			// var link proto.Primitive
-			// exists := true
-			// // resolve values of all quad directions
-			// // if any of the direction does not exists, the quad does not exists as well
-			// for _, dir := range quad.Directions {
-			// 	h := q.Quad.Get(dir)
-			// 	n, ok := nodes[h]
-			// 	if !ok {
-			// 		var id uint64
-			// 		id, ok = dnodes[h]
-			// 		n.ID = id
-			// 	}
-			// 	if !ok {
-			// 		exists = exists && !h.Valid()
-			// 		continue
-			// 	}
-			// 	link.SetDirection(dir, n.ID)
-			// }
-			// if exists {
-			// 	p, err := qs.hasPrimitive(ctx, tx, &link, true)
-			// 	if err != nil {
-			// 		return err
-			// 	} else if p == nil || p.Deleted {
-			// 		exists = false
-			// 	} else {
-			// 		link = *p
-			// 	}
-			// }
-			if link == nil {
+			if !exists {
 				if !ignoreOpts.IgnoreMissing {
 					return &graph.DeltaError{Delta: in[q.Ind], Err: graph.ErrQuadNotExist}
 				}
-				// // revert counters for all directions of this quad
-				// for _, dir := range quad.Directions {
-				// 	if h := q.Quad.Get(dir); h.Valid() {
-				// 		fixNodes[h]++
-				// 	}
-				// }
+				if !byCid {
+					// revert counters for all directions of this quad
+					for _, dir := range quad.Directions {
+						if h := q.Quad.Get(dir); h.Valid() {
+							fixNodes[h]++
+						}
+					}
+				}
 				continue
 			}
-			links = append(links, *link)
-			cids = append(cids, in[q.Ind].Cid)
-
-			// count del ref
-			for dir := quad.Subject; dir <= quad.Label; dir++ {
-				id := link.GetDirection(dir)
-				if id == 0 {
-					continue
+			links = append(links, link)
+			if byCid {
+				cids = append(cids, in[q.Ind].Cid)
+				for _, dir := range quad.Directions {
+					id := link.GetDirection(dir)
+					if id == 0 {
+						continue
+					}
+					dec, ok := decNodes[id]
+					if !ok {
+						p, err := qs.getPrimitiveFromLog(ctx, tx, id)
+						if err != nil {
+							return err
+						}
+						v, err := pquads.UnmarshalValue(p.Value)
+						if err != nil {
+							return err
+						}
+						if v == nil {
+							return graph.ErrNodeNotExists
+						}
+						dec = &graphlog.NodeUpdate{
+							Hash: refs.HashOf(v),
+							Val:  v,
+						}
+						decNodes[id] = dec
+						dnodes[dec.Hash] = id
+					}
+					dec.RefInc--
 				}
-				dec, ok := decNodes[id]
-				if !ok {
-					p, err := qs.getPrimitiveFromLog(ctx, tx, id)
-					if err != nil {
-						return err
-					}
-					v, err := pquads.UnmarshalValue(p.Value)
-					if err != nil {
-						return err
-					}
-					if v == nil {
-						return graph.ErrNodeNotExists
-					}
-					dec = &graphlog.NodeUpdate{
-						Hash: refs.HashOf(v),
-						Val:  v,
-					}
-					decNodes[id] = dec
-					dnodes[dec.Hash] = id
-				}
-				dec.RefInc--
 			}
 		}
+		deltas.QuadDel = nil
 		if err := qs.markLinksDead(ctx, tx, links); err != nil {
 			return err
 		}
-		if err := qs.delCidLog(ctx, tx, cids); err != nil {
+		if err := qs.delCids(ctx, tx, cids); err != nil {
 			return err
 		}
-		deltas.QuadDel = nil
 		links = nil
-		// nodes = nil
+		nodes = nil
 
-		// // we decremented some nodes that has non-existent quads - let's fix this
-		// if len(fixNodes) != 0 {
-		// 	for i, n := range deltas.DecNode {
-		// 		if dn := fixNodes[n.Hash]; dn != 0 {
-		// 			deltas.DecNode[i].RefInc += dn
-		// 		}
-		// 	}
-		// }
+		// we decremented some nodes that has non-existent quads - let's fix this
+		if len(fixNodes) != 0 {
+			for i, n := range deltas.DecNode {
+				if dn := fixNodes[n.Hash]; dn != 0 {
+					deltas.DecNode[i].RefInc += dn
+				}
+			}
+		}
+
+		for _, n := range deltas.DecNode {
+			id := dnodes[n.Hash]
+			d, exist := decNodes[id]
+			if !exist {
+				ncp := n
+				decNodes[id] = &ncp
+			} else {
+				d.RefInc += n.RefInc
+			}
+		}
 
 		deltas := make([]graphlog.NodeUpdate, 0, len(decNodes))
 		for _, node := range decNodes {
@@ -752,12 +773,14 @@ func (qs *QuadStore) indexNode(tx kv.Tx, p *proto.Primitive, val quad.Value) err
 func (qs *QuadStore) indexLinks(ctx context.Context, tx kv.Tx, links []proto.Primitive, cids []string) error {
 	ctop := make(map[string]uint64)
 	for i, p := range links {
-		ctop[cids[i]] = p.ID
+		if len(cids[i]) > 0 {
+			ctop[cids[i]] = p.ID
+		}
 		if err := qs.indexLink(tx, &p); err != nil {
 			return err
 		}
 	}
-	if err := qs.addCidToPrimitive(tx, ctop); err != nil {
+	if err := qs.addCidIndex(tx, ctop); err != nil {
 		return err
 	}
 	return qs.incSize(ctx, tx, int64(len(links)))
@@ -1108,11 +1131,11 @@ func (qs *QuadStore) indexSchema(tx kv.Tx, p *proto.Primitive) error {
 	return nil
 }
 
-func (qs *QuadStore) addCidToPrimitive(tx kv.Tx, cidToPrimitive map[string]uint64) error {
+func (qs *QuadStore) addCidIndex(tx kv.Tx, cidToPrimitive map[string]uint64) error {
 	for cid, pid := range cidToPrimitive {
 		buf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(buf, pid)
-		if err := tx.Put(cidToLog.AppendBytes([]byte(cid)), buf); err != nil {
+		if err := tx.Put(cidIndex.AppendBytes([]byte(cid)), buf); err != nil {
 			return err
 		}
 	}
@@ -1253,7 +1276,7 @@ func (qs *QuadStore) getPrimitiveFromLog(ctx context.Context, tx kv.Tx, k uint64
 }
 
 func (qs *QuadStore) getPrimitiveByCid(ctx context.Context, tx kv.Tx, cid string) (*proto.Primitive, error) {
-	v, err := tx.Get(ctx, cidToLog.AppendBytes([]byte(cid)))
+	v, err := tx.Get(ctx, cidIndex.AppendBytes([]byte(cid)))
 	if err != nil {
 		return nil, err
 	}
@@ -1268,9 +1291,9 @@ func (qs *QuadStore) getPrimitiveByCid(ctx context.Context, tx kv.Tx, cid string
 	return p, nil
 }
 
-func (qs *QuadStore) delCidLog(ctx context.Context, tx kv.Tx, cids []string) error {
+func (qs *QuadStore) delCids(ctx context.Context, tx kv.Tx, cids []string) error {
 	for _, cid := range cids {
-		err := tx.Del(cidToLog.AppendBytes([]byte(cid)))
+		err := tx.Del(cidIndex.AppendBytes([]byte(cid)))
 		if err != nil {
 			return err
 		}

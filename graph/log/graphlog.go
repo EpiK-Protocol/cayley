@@ -94,19 +94,22 @@ func SplitDeltas(in []graph.Delta) *Deltas {
 			panic("unknown action")
 		}
 		var q refs.QuadHash
-		for _, dir := range quad.Directions {
-			v := d.Quad.Get(dir)
-			if v == nil {
-				continue
+		if d.Action == graph.Add || len(d.Cid) == 0 {
+			// nodes deleted by cid will be loaded at ApplyDeltas
+			for _, dir := range quad.Directions {
+				v := d.Quad.Get(dir)
+				if v == nil {
+					continue
+				}
+				h := refs.HashOf(v)
+				q.Set(dir, h)
+				n := hnodes[h]
+				if n == nil {
+					n = &NodeUpdate{Hash: h, Val: v}
+					hnodes[h] = n
+				}
+				n.RefInc += dn
 			}
-			h := refs.HashOf(v)
-			q.Set(dir, h)
-			n := hnodes[h]
-			if n == nil {
-				n = &NodeUpdate{Hash: h, Val: v}
-				hnodes[h] = n
-			}
-			n.RefInc += dn
 		}
 		u := QuadUpdate{Ind: i, Quad: q, Del: d.Action == graph.Delete}
 		if !u.Del {
