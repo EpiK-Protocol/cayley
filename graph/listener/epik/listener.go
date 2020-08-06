@@ -2,7 +2,9 @@ package epik
 
 import (
 	"bytes"
+	"container/list"
 	"context"
+	"fmt"
 	"io"
 	"sync"
 	"time"
@@ -10,6 +12,13 @@ import (
 	"github.com/cayleygraph/quad/nquads"
 	"github.com/epik-protocol/gateway/clog"
 	"github.com/epik-protocol/gateway/graph"
+
+	"github.com/EpiK-Protocol/go-epik/api"
+	"github.com/EpiK-Protocol/go-epik/chain/types"
+	"github.com/filecoin-project/go-address"
+	"github.com/filecoin-project/specs-actors/actors/abi"
+	"github.com/filecoin-project/specs-actors/actors/builtin"
+	"github.com/filecoin-project/specs-actors/actors/builtin/market"
 )
 
 const (
@@ -33,7 +42,7 @@ type Listener struct {
 	start sync.Once
 	wg    sync.WaitGroup
 
-	client EpikClient
+	client api.FullNode
 	store  graph.QuadStore
 }
 
@@ -53,45 +62,55 @@ func (s *Listener) Start() {
 }
 
 func (s *Listener) listen() {
-	var (
-		err    error
-		close  func()
-		ticker = time.NewTicker(syncDuration)
-	)
-	s.client, close, err = NewEpikClient()
-	if err != nil {
-		clog.Fatalf("failed to init epik client: %v", err)
-	}
 
 	defer func() {
 		err := recover()
 		if err != nil {
 			clog.Errorf("panic: %v", err)
 		}
-		close()
-		ticker.Stop()
+		s.wg.Done()
 	}()
+
+	var (
+		err    error
+		close  func()
+		ticker = time.NewTicker(syncDuration)
+	)
+
+	s.client, close, err = GetEpikAPI()
+	if err != nil {
+		clog.Fatalf("failed to init epik client: %v", err)
+	}
+	defer close()
+	defer ticker.Stop()
+
+	ctx, cancelFunc := context.WithCancel(context.Background())
 
 	for {
 		select {
 		case <-s.quit:
+			cancelFunc()
 			clog.Infof("epik syncer stopped")
 			return
 		case <-ticker.C:
-			local, err := s.store.Stats(context.TODO(), false)
+			local, err := s.store.Stats(ctx, false)
 			if err != nil {
 				clog.Errorf("failed to get quadstore stats: %v", err)
 				continue
 			}
 
-			remote, err := s.client.GetBestEpoch(context.TODO())
+			head, err := s.client.ChainHead(ctx)
 			if err != nil {
-				clog.Errorf("failed to get best epoch: %v", err)
+				clog.Errorf("failed to get head epoch: %v", err)
+				continue
+			}
+			remote := int64(head.Height())
+			if remote <= 1 {
 				continue
 			}
 
-			if err = s.syncDeltas(local.Epoch+1, remote); err != nil {
-				clog.Errorf("failed to sync epick from %d to %d, error is: %v", local.Epoch+1, remote, err)
+			if err = s.syncDeltas(ctx, local.Epoch+1, remote-1); err != nil {
+				clog.Errorf("failed to sync deltas from %d to %d, error is: %v", local.Epoch+1, remote-1, err)
 			}
 		}
 	}
@@ -102,47 +121,141 @@ func (s *Listener) Stop() {
 	s.wg.Wait()
 }
 
-func (s *Listener) syncDeltas(current, end int64) error {
-	for ; current <= end; current++ {
+func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
+	tss, err := s.getTipSets(ctx, start, end)
+	if err != nil {
+		return err
+	}
+
+	for _, ts := range tss {
 		select {
-		case <-s.quit:
-			break
+		case <-ctx.Done():
+			return ctx.Err()
 		default:
 		}
 
-		msgs, err := s.client.GetMessages(context.TODO(), current)
+		// get tipset messages
+		msgs, err := s.getTipSetMessages(ctx, ts)
 		if err != nil {
-			clog.Errorf("failed to get change at epoch %d, error is: %v", current, err)
 			return err
 		}
 
-		// delete
-		deltas, err := parseDeletes(msgs.Deletes)
+		// retrieve files
+		quadAdds := make(map[string][]byte)
+		for _, msg := range msgs {
+			if msg.To != builtin.StorageMarketActorAddr ||
+				msg.Method != builtin.MethodsMarket.PublishStorageDeals {
+				continue
+			}
+
+			var params market.PublishStorageDealsParams
+			if err := params.UnmarshalCBOR(bytes.NewReader(msg.Params)); err != nil {
+				clog.Errorf("failed to unmarshal params at tipset %d, error is: %v", ts.Height(), err)
+				return err
+			}
+
+			for _, deal := range params.Deals {
+				cid := deal.Proposal.PieceCID
+				offers, err := s.client.ClientFindData(ctx, cid)
+				if err != nil {
+					return err
+				}
+				if len(offers) < 1 {
+					return fmt.Errorf("no offers for %s", cid)
+				}
+				if offers[0].Err != "" {
+					return fmt.Errorf("The received offer errored: %s", offers[0].Err)
+				}
+
+				var payer address.Address
+				ref := &api.FileRef{
+					Path: "./" + cid.String(),
+				}
+				if err := s.client.ClientRetrieve(ctx, offers[0].Order(payer), ref); err != nil {
+					return fmt.Errorf("Retrieval Failed: %w", err)
+				}
+
+				// TODO:
+				quadAdds[cid.String()] = []byte{}
+			}
+		}
+
+		// add to QuadStore
+		// // delete
+		// deltas, err := parseDeletes(msgs.Deletes)
+		// if err != nil {
+		// 	clog.Errorf("failed to parse deleted cids at epoch %d, error is: %v", current, err)
+		// 	return err
+		// }
+
+		// // add
+		// objs, err := s.client.GetObjects(context.TODO(), msgs.Adds)
+		// if err != nil {
+		// 	clog.Errorf("failed to get objects at epoch %d, error is: %v", current, err)
+		// 	return err
+		// }
+
+		adds, err := parseAdds(quadAdds)
 		if err != nil {
-			clog.Errorf("failed to parse deleted cids at epoch %d, error is: %v", current, err)
+			clog.Errorf("failed to parse added cids at epoch %d, error is: %v", ts.Height(), err)
 			return err
 		}
 
-		// add
-		objs, err := s.client.GetObjects(context.TODO(), msgs.Adds)
-		if err != nil {
-			clog.Errorf("failed to get objects at epoch %d, error is: %v", current, err)
-			return err
-		}
-
-		adds, err := parseAdds(objs)
-		if err != nil {
-			clog.Errorf("failed to parse added cids at epoch %d, error is: %v", current, err)
-			return err
-		}
-
-		deltas = append(deltas, adds...)
-		if err = s.store.ApplyDeltas(current, deltas, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true}); err != nil {
-			clog.Errorf("failed to apply adds at epoch %d, error is: %v", current, err)
+		if err = s.store.ApplyDeltas(int64(ts.Height()), adds, graph.IgnoreOpts{IgnoreDup: true, IgnoreMissing: true}); err != nil {
+			clog.Errorf("failed to apply adds at epoch %d, error is: %v", ts.Height(), err)
 			return err
 		}
 	}
 	return nil
+}
+
+func (s *Listener) getTipSets(ctx context.Context, start, end int64) ([]*types.TipSet, error) {
+	from := types.EmptyTSK
+	tsl := list.New()
+
+	for start <= end {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+
+		ts, err := s.client.ChainGetTipSetByHeight(ctx, abi.ChainEpoch(end), from)
+		if err != nil {
+			clog.Errorf("failed to get tipset at epoch %d, error is: %v", end, err)
+			return nil, err
+		}
+		if int64(ts.Height()) < start {
+			break
+		}
+		tsl.PushFront(ts)
+		from = ts.Key()
+		end = int64(ts.Height()) - 1
+	}
+	r := make([]*types.TipSet, 0, tsl.Len())
+	for e := tsl.Front(); e != nil; e.Next() {
+		r = append(r, e.Value.(*types.TipSet))
+	}
+	return r, nil
+}
+
+func (s *Listener) getTipSetMessages(ctx context.Context, ts *types.TipSet) ([]*types.Message, error) {
+	// get tipset messages
+	msgs := make([]*types.Message, 0, 100)
+	for _, bcid := range ts.Cids() {
+		bm, err := s.client.ChainGetBlockMessages(ctx, bcid)
+		if err != nil {
+			clog.Errorf("failed to get block messages at tipset %d, error is: %v", ts.Height(), err)
+			return nil, err
+		}
+		for _, m := range bm.BlsMessages {
+			msgs = append(msgs, m)
+		}
+		for _, m := range bm.SecpkMessages {
+			msgs = append(msgs, &m.Message)
+		}
+	}
+	return msgs, nil
 }
 
 func parseDeletes(cids []string) ([]graph.Delta, error) {

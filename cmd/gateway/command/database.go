@@ -213,7 +213,7 @@ func openDatabase() (*graph.Handle, error) {
 		return nil, err
 	}
 	// TODO: make it optional
-	lis, err := graph.NewListener("chain", qs)
+	lis, err := graph.NewListener("epik", qs)
 	if err != nil {
 		return nil, err
 	}

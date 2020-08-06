@@ -11,6 +11,9 @@ import (
 	multiaddr "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
 	"github.com/spf13/viper"
+
+	"github.com/EpiK-Protocol/go-epik/api"
+	"github.com/EpiK-Protocol/go-epik/api/client"
 )
 
 type RepoType int
@@ -19,7 +22,7 @@ const (
 	flagEpikAddr  = "epik.address"
 	flagEpikToken = "epik.token"
 
-	envAPIInfo = "EPIK_API_INFO"
+	envFullNodeInfo = "FULLNODE_API_INFO"
 )
 
 type APIInfo struct {
@@ -42,8 +45,7 @@ func (a APIInfo) AuthHeader() http.Header {
 	return nil
 }
 
-func NewEpikClient() (EpikClient, jsonrpc.ClientCloser, error) {
-
+func GetEpikAPI() (api.FullNode, jsonrpc.ClientCloser, error) {
 	ainfo, err := GetAPIInfo()
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not get API info: %w", err)
@@ -54,28 +56,44 @@ func NewEpikClient() (EpikClient, jsonrpc.ClientCloser, error) {
 		return nil, nil, fmt.Errorf("could not get DialArgs: %w", err)
 	}
 
-	var res EpikClientStruct
-	closer, err := jsonrpc.NewMergeClient(addr, "Epik",
-		[]interface{}{
-			&res.Internal,
-		},
-		ainfo.AuthHeader(),
-	)
-	return &res, closer, err
+	//TODO: replace with go-epik
+	return client.NewFullNodeRPC(addr, ainfo.AuthHeader())
 }
+
+// func NewEpikClient() (EpikClient, jsonrpc.ClientCloser, error) {
+
+// 	ainfo, err := GetAPIInfo()
+// 	if err != nil {
+// 		return nil, nil, fmt.Errorf("could not get API info: %w", err)
+// 	}
+
+// 	addr, err := ainfo.DialArgs()
+// 	if err != nil {
+// 		return nil, nil, fmt.Errorf("could not get DialArgs: %w", err)
+// 	}
+
+// 	var res EpikClientStruct
+// 	closer, err := jsonrpc.NewMergeClient(addr, "Epik",
+// 		[]interface{}{
+// 			&res.Internal,
+// 		},
+// 		ainfo.AuthHeader(),
+// 	)
+// 	return &res, closer, err
+// }
 
 func GetAPIInfo() (APIInfo, error) {
 
 	info := APIInfo{}
 
-	if env, ok := os.LookupEnv(envAPIInfo); ok {
+	if env, ok := os.LookupEnv(envFullNodeInfo); ok {
 		sp := strings.SplitN(env, ":", 2)
 		if len(sp) != 2 {
-			clog.Warningf("invalid env(%s) value, missing token or address", envAPIInfo)
+			clog.Warningf("invalid env(%s) value, missing token or address", envFullNodeInfo)
 		} else {
 			ma, err := multiaddr.NewMultiaddr(sp[1])
 			if err != nil {
-				return APIInfo{}, fmt.Errorf("could not parse multiaddr from env(%s): %w", envAPIInfo, err)
+				return APIInfo{}, fmt.Errorf("could not parse multiaddr from env(%s): %w", envFullNodeInfo, err)
 			}
 			info.Addr = ma
 			info.Token = []byte(sp[0])

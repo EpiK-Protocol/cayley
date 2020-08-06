@@ -4,10 +4,6 @@ import (
 	"fmt"
 )
 
-var (
-	ErrListenerNotRegistred = fmt.Errorf("this listener is not registered")
-)
-
 var listenerRegistry = make(map[string]ListenerRegistration)
 
 type HandleDeltaFunc func([]Delta) error
@@ -35,7 +31,7 @@ func RegisterListener(name string, register ListenerRegistration) {
 func NewListener(name string, store QuadStore) (Listener, error) {
 	r, registered := listenerRegistry[name]
 	if !registered {
-		return nil, ErrListenerNotRegistred
+		return nil, fmt.Errorf("listener(%s) not registered", name)
 	}
 	return r.NewListenerFunc(store)
 }

@@ -56,6 +56,9 @@ import (
 	_ "github.com/epik-protocol/gateway/query/graphql"
 	_ "github.com/epik-protocol/gateway/query/mql"
 	_ "github.com/epik-protocol/gateway/query/sexp"
+
+	// Register listener
+	_ "github.com/epik-protocol/gateway/graph/listener/epik"
 )
 
 var (
