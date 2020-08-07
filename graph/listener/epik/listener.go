@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"container/list"
 	"context"
+	"fmt"
 	"io"
 	"sync"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"github.com/cayleygraph/quad/nquads"
 	"github.com/epik-protocol/gateway/clog"
 	"github.com/epik-protocol/gateway/graph"
+	"github.com/ipfs/go-cid"
 
 	"github.com/filecoin-project/specs-actors/actors/abi"
 	"github.com/filecoin-project/specs-actors/actors/builtin"
@@ -20,9 +22,7 @@ import (
 const (
 	ListenerType = "epik"
 
-	syncDuration = 30 * time.Second
-
-	readBatchSize = 10000
+	syncDuration = 10 * time.Minute
 )
 
 func init() {
@@ -67,18 +67,18 @@ func (s *Listener) listen() {
 		s.wg.Done()
 	}()
 
-	var (
-		err    error
-		close  func()
-		ticker = time.NewTicker(syncDuration)
-	)
+	ticker := time.NewTicker(syncDuration)
+	defer ticker.Stop()
 
+	var (
+		err   error
+		close func()
+	)
 	s.client, close, err = NewEpikClient()
 	if err != nil {
 		clog.Fatalf("failed to init epik client: %v", err)
 	}
 	defer close()
-	defer ticker.Stop()
 
 	ctx, cancelFunc := context.WithCancel(context.Background())
 
@@ -136,8 +136,8 @@ func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
 			return err
 		}
 
-		// retrieve files
-		quadAdds := make(map[string][]byte)
+		// filter storage deals
+		cids := make([]cid.Cid, 0, len(msgs))
 		for _, msg := range msgs {
 			if msg.To != builtin.StorageMarketActorAddr ||
 				msg.Method != builtin.MethodsMarket.PublishStorageDeals {
@@ -151,28 +151,7 @@ func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
 			}
 
 			for _, deal := range params.Deals {
-				cid := deal.Proposal.PieceCID
-				err := s.client.ClientFindData(ctx, cid)
-				if err != nil {
-					return err
-				}
-				// if len(offers) < 1 {
-				// 	return fmt.Errorf("no offers for %s", cid)
-				// }
-				// if offers[0].Err != "" {
-				// 	return fmt.Errorf("The received offer errored: %s", offers[0].Err)
-				// }
-
-				// var payer address.Address
-				// ref := &api.FileRef{
-				// 	Path: "./" + cid.String(),
-				// }
-				// if err := s.client.ClientRetrieve(ctx, offers[0].Order(payer), ref); err != nil {
-				// 	return fmt.Errorf("Retrieval Failed: %w", err)
-				// }
-
-				// TODO:
-				quadAdds[cid.String()] = []byte{}
+				cids = append(cids, deal.Proposal.PieceCID)
 			}
 		}
 
@@ -184,12 +163,11 @@ func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
 		// 	return err
 		// }
 
-		// // add
-		// objs, err := s.client.GetObjects(context.TODO(), msgs.Adds)
-		// if err != nil {
-		// 	clog.Errorf("failed to get objects at epoch %d, error is: %v", current, err)
-		// 	return err
-		// }
+		quadAdds, err := s.retrieveFiles(ctx, cids)
+		if err != nil {
+			clog.Errorf("failed to wait at epoch %d, error is: %v", ts.Height, err)
+			return err
+		}
 
 		adds, err := parseAdds(quadAdds)
 		if err != nil {
@@ -204,6 +182,48 @@ func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
 	}
 	// just set epoch to "end"
 	return s.store.ApplyDeltas(end, nil, graph.IgnoreOpts{})
+}
+
+func (s *Listener) retrieveFiles(ctx context.Context, cids []cid.Cid) (map[string][]byte, error) {
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	downloader := newDownloader()
+loop:
+	for {
+		var unfinished []cid.Cid
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-ticker.C:
+			if len(cids) == 0 {
+				break loop
+			}
+			fds, err := s.client.RetrieveFile(ctx, cids)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, fd := range fds {
+				switch fd.Status {
+				case FileDownloaded:
+					if err := downloader.download(ctx, fd.Cid.String(), fd.Url); err != nil {
+						return nil, err
+					}
+				case FileDownloading:
+					unfinished = append(unfinished, fd.Cid)
+				default:
+					return nil, fmt.Errorf("unexpected file status: %d", fd.Status)
+				}
+			}
+		}
+		cids = unfinished
+	}
+	downloader.wait()
+	if downloader.failed > 0 {
+		return nil, fmt.Errorf("file downloader failed %d times", downloader.failed)
+	}
+	return downloader.result, nil
 }
 
 func (s *Listener) getTipSets(ctx context.Context, start, end int64) ([]*TipSet, error) {

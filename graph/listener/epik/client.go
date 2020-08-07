@@ -1,6 +1,7 @@
 package epik
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -8,6 +9,8 @@ import (
 
 	"github.com/epik-protocol/gateway/clog"
 	"github.com/filecoin-project/go-jsonrpc"
+	"github.com/filecoin-project/specs-actors/actors/abi"
+	"github.com/ipfs/go-cid"
 	multiaddr "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
 	"github.com/spf13/viper"
@@ -25,6 +28,38 @@ const (
 type APIInfo struct {
 	Addr  multiaddr.Multiaddr
 	Token []byte
+}
+
+type EpikClient interface {
+	ChainHead(context.Context) (*TipSet, error)
+	ChainGetTipSetByHeight(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)
+	ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error)
+	RetrieveFile(ctx context.Context, rootCids []cid.Cid) ([]FileData, error)
+}
+
+type EpikClientStruct struct {
+	Internal struct {
+		ChainHead              func(context.Context) (*TipSet, error)                              `perm:"read"`
+		ChainGetTipSetByHeight func(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)   `perm:"read"`
+		ChainGetBlockMessages  func(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) `perm:"read"`
+		RetrieveFile           func(ctx context.Context, rootCids []cid.Cid) ([]FileData, error)   `perm:"read"`
+	}
+}
+
+func (e *EpikClientStruct) ChainHead(ctx context.Context) (*TipSet, error) {
+	return e.Internal.ChainHead(ctx)
+}
+
+func (e *EpikClientStruct) ChainGetTipSetByHeight(ctx context.Context, epoch abi.ChainEpoch, tsk TipSetKey) (*TipSet, error) {
+	return e.Internal.ChainGetTipSetByHeight(ctx, epoch, tsk)
+}
+
+func (e *EpikClientStruct) ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) {
+	return e.Internal.ChainGetBlockMessages(ctx, blockCid)
+}
+
+func (e *EpikClientStruct) RetrieveFile(ctx context.Context, rootCids []cid.Cid) ([]FileData, error) {
+	return e.Internal.RetrieveFile(ctx, rootCids)
 }
 
 func (a APIInfo) DialArgs() (string, error) {

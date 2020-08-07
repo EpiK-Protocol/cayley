@@ -2,7 +2,6 @@ package epik
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 
 	"github.com/filecoin-project/specs-actors/actors/abi"
@@ -93,34 +92,13 @@ func decodeKey(encoded []byte) ([]cid.Cid, error) {
 	return cids, nil
 }
 
-type EpikClient interface {
-	ChainHead(context.Context) (*TipSet, error)
-	ChainGetTipSetByHeight(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)
-	ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error)
-	ClientFindData(ctx context.Context, root cid.Cid) error
-}
+const (
+	FileDownloading = 0
+	FileDownloaded  = 1
+)
 
-type EpikClientStruct struct {
-	Internal struct {
-		ChainHead              func(context.Context) (*TipSet, error)                              `perm:"read"`
-		ChainGetTipSetByHeight func(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)   `perm:"read"`
-		ChainGetBlockMessages  func(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) `perm:"read"`
-		ClientFindData         func(ctx context.Context, root cid.Cid) error                       `perm:"read"`
-	}
-}
-
-func (e *EpikClientStruct) ChainHead(ctx context.Context) (*TipSet, error) {
-	return e.Internal.ChainHead(ctx)
-}
-
-func (e *EpikClientStruct) ChainGetTipSetByHeight(ctx context.Context, epoch abi.ChainEpoch, tsk TipSetKey) (*TipSet, error) {
-	return e.Internal.ChainGetTipSetByHeight(ctx, epoch, tsk)
-}
-
-func (e *EpikClientStruct) ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) {
-	return e.Internal.ChainGetBlockMessages(ctx, blockCid)
-}
-
-func (e *EpikClientStruct) ClientFindData(ctx context.Context, root cid.Cid) error {
-	return e.Internal.ClientFindData(ctx, root)
+type FileData struct {
+	Status int
+	Url    string
+	Cid    cid.Cid
 }
