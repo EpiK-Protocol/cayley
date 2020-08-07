@@ -11,9 +11,6 @@ import (
 	multiaddr "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
 	"github.com/spf13/viper"
-
-	"github.com/EpiK-Protocol/go-epik/api"
-	"github.com/EpiK-Protocol/go-epik/api/client"
 )
 
 type RepoType int
@@ -45,7 +42,8 @@ func (a APIInfo) AuthHeader() http.Header {
 	return nil
 }
 
-func GetEpikAPI() (api.FullNode, jsonrpc.ClientCloser, error) {
+func NewEpikClient() (EpikClient, jsonrpc.ClientCloser, error) {
+
 	ainfo, err := GetAPIInfo()
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not get API info: %w", err)
@@ -56,31 +54,16 @@ func GetEpikAPI() (api.FullNode, jsonrpc.ClientCloser, error) {
 		return nil, nil, fmt.Errorf("could not get DialArgs: %w", err)
 	}
 
-	//TODO: replace with go-epik
-	return client.NewFullNodeRPC(addr, ainfo.AuthHeader())
+	var res EpikClientStruct
+	closer, err := jsonrpc.NewMergeClient(addr, "EpiK",
+		[]interface{}{
+			&res.Internal,
+		},
+		ainfo.AuthHeader(),
+	)
+
+	return &res, closer, err
 }
-
-// func NewEpikClient() (EpikClient, jsonrpc.ClientCloser, error) {
-
-// 	ainfo, err := GetAPIInfo()
-// 	if err != nil {
-// 		return nil, nil, fmt.Errorf("could not get API info: %w", err)
-// 	}
-
-// 	addr, err := ainfo.DialArgs()
-// 	if err != nil {
-// 		return nil, nil, fmt.Errorf("could not get DialArgs: %w", err)
-// 	}
-
-// 	var res EpikClientStruct
-// 	closer, err := jsonrpc.NewMergeClient(addr, "Epik",
-// 		[]interface{}{
-// 			&res.Internal,
-// 		},
-// 		ainfo.AuthHeader(),
-// 	)
-// 	return &res, closer, err
-// }
 
 func GetAPIInfo() (APIInfo, error) {
 
@@ -105,7 +88,7 @@ func GetAPIInfo() (APIInfo, error) {
 	if len(flagAddr) > 0 {
 		ma, err := multiaddr.NewMultiaddr(flagAddr)
 		if err != nil {
-			return APIInfo{}, fmt.Errorf("could not parse multiaddr from flag: %w", err)
+			return APIInfo{}, fmt.Errorf("could not parse multiaddr(%s) from flag: %w", flagAddr, err)
 		}
 		info.Addr = ma
 	}
