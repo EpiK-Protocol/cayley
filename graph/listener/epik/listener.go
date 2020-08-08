@@ -199,7 +199,7 @@ loop:
 			if len(cids) == 0 {
 				break loop
 			}
-			fds, err := s.client.RetrieveFile(ctx, cids)
+			fds, err := s.client.ClientQuery(ctx, cids)
 			if err != nil {
 				return nil, err
 			}
@@ -207,11 +207,11 @@ loop:
 			for _, fd := range fds {
 				switch fd.Status {
 				case FileDownloaded:
-					if err := downloader.download(ctx, fd.Cid.String(), fd.Url); err != nil {
+					if err := downloader.download(ctx, fd.Root.String(), fd.Url); err != nil {
 						return nil, err
 					}
 				case FileDownloading:
-					unfinished = append(unfinished, fd.Cid)
+					unfinished = append(unfinished, fd.Root)
 				default:
 					return nil, fmt.Errorf("unexpected file status: %d", fd.Status)
 				}

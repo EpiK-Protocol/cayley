@@ -97,8 +97,8 @@ const (
 	FileDownloaded  = 1
 )
 
-type FileData struct {
+type FileResp struct {
+	Root   cid.Cid
 	Status int
 	Url    string
-	Cid    cid.Cid
 }

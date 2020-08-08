@@ -34,7 +34,7 @@ type EpikClient interface {
 	ChainHead(context.Context) (*TipSet, error)
 	ChainGetTipSetByHeight(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)
 	ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error)
-	RetrieveFile(ctx context.Context, rootCids []cid.Cid) ([]FileData, error)
+	ClientQuery(ctx context.Context, roots []cid.Cid) ([]FileResp, error)
 }
 
 type EpikClientStruct struct {
@@ -42,7 +42,7 @@ type EpikClientStruct struct {
 		ChainHead              func(context.Context) (*TipSet, error)                              `perm:"read"`
 		ChainGetTipSetByHeight func(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)   `perm:"read"`
 		ChainGetBlockMessages  func(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) `perm:"read"`
-		RetrieveFile           func(ctx context.Context, rootCids []cid.Cid) ([]FileData, error)   `perm:"read"`
+		ClientQuery            func(ctx context.Context, roots []cid.Cid) ([]FileResp, error)      `perm:"read"`
 	}
 }
 
@@ -58,8 +58,8 @@ func (e *EpikClientStruct) ChainGetBlockMessages(ctx context.Context, blockCid c
 	return e.Internal.ChainGetBlockMessages(ctx, blockCid)
 }
 
-func (e *EpikClientStruct) RetrieveFile(ctx context.Context, rootCids []cid.Cid) ([]FileData, error) {
-	return e.Internal.RetrieveFile(ctx, rootCids)
+func (e *EpikClientStruct) ClientQuery(ctx context.Context, roots []cid.Cid) ([]FileResp, error) {
+	return e.Internal.ClientQuery(ctx, roots)
 }
 
 func (a APIInfo) DialArgs() (string, error) {
