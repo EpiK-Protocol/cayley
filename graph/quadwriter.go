@@ -80,7 +80,9 @@ type IgnoreOpts struct {
 
 func (h *Handle) Close() error {
 	err := h.QuadWriter.Close()
-	h.Listener.Stop()
+	if h.Listener != nil {
+		h.Listener.Stop()
+	}
 	h.QuadStore.Close()
 	return err
 }

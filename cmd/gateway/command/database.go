@@ -27,6 +27,8 @@ const (
 	KeyOptions  = "store.options"
 
 	KeyLoadBatch = "load.batch"
+
+	KeyDataSource = "data.source"
 )
 
 const (
@@ -203,6 +205,7 @@ func initDatabase() error {
 func openDatabase() (*graph.Handle, error) {
 	name := viper.GetString(KeyBackend)
 	path := viper.GetString(KeyAddress)
+	src := viper.GetString(KeyDataSource)
 	opts := graph.Options(viper.GetStringMap(KeyOptions))
 	qs, err := graph.NewQuadStore(name, path, opts)
 	if err != nil {
@@ -212,12 +215,18 @@ func openDatabase() (*graph.Handle, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO: make it optional
-	lis, err := graph.NewListener("epik", qs)
-	if err != nil {
-		return nil, err
+	h := &graph.Handle{QuadStore: qs, QuadWriter: qw}
+
+	if len(src) > 0 {
+		listener, err := graph.NewListener(src, qs)
+		if err == nil {
+			h.Listener = listener
+			h.Start()
+		} else {
+			clog.Warningf("failed to start listener: %s, error: %v", src, err)
+		}
 	}
-	return &graph.Handle{QuadStore: qs, QuadWriter: qw, Listener: lis}, nil
+	return h, nil
 }
 
 func openForQueries(cmd *cobra.Command) (*graph.Handle, error) {
