@@ -1,12 +1,12 @@
 package mongo
 
 import (
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 	"github.com/hidal-go/hidalgo/legacy/nosql"
 	"github.com/hidal-go/hidalgo/legacy/nosql/mongo"
 
 	//import hidal-go first so the registration of the no sql stores occurs before quadstore iterates for registration
-	gnosql "github.com/epik-protocol/gateway/graph/nosql"
+	gnosql "github.com/epik-protocol/epik-gateway-backend/graph/nosql"
 )
 
 const Type = mongo.Name

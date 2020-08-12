@@ -23,9 +23,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/graphmock"
-	. "github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphmock"
+	. "github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 var (

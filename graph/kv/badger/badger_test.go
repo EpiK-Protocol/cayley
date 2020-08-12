@@ -19,8 +19,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/kv/kvtest"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/kv/kvtest"
 	hkv "github.com/hidal-go/hidalgo/kv"
 )
 

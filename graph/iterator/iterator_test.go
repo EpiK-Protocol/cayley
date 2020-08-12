@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	. "github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	. "github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // A testing iterator that returns the given values for Next() and Err().

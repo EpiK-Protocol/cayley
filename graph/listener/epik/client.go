@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/specs-actors/actors/abi"
 	"github.com/ipfs/go-cid"

@@ -27,11 +27,11 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/pquads"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	graphlog "github.com/epik-protocol/gateway/graph/log"
-	"github.com/epik-protocol/gateway/graph/proto"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	graphlog "github.com/epik-protocol/epik-gateway-backend/graph/log"
+	"github.com/epik-protocol/epik-gateway-backend/graph/proto"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 
 	"github.com/hidal-go/hidalgo/kv"
 	"github.com/prometheus/client_golang/prometheus"

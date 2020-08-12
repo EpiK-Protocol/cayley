@@ -3,9 +3,9 @@ package steps
 import (
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/query/linkedql"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/query/linkedql"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 )
 
 func init() {

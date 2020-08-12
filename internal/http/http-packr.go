@@ -5,4 +5,4 @@
 // and any other packr generated files.
 package http
 
-import _ "github.com/epik-protocol/gateway/packrd"
+import _ "github.com/epik-protocol/epik-gateway-backend/packrd"

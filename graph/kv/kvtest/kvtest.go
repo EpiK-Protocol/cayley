@@ -6,11 +6,11 @@ import (
 	"testing"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphtest"
-	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
-	"github.com/epik-protocol/gateway/graph/kv"
-	"github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest/testutil"
+	"github.com/epik-protocol/epik-gateway-backend/graph/kv"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/stretchr/testify/require"
 )

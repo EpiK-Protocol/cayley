@@ -5,7 +5,7 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 	"github.com/stretchr/testify/require"
 )
 

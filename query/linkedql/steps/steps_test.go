@@ -13,8 +13,8 @@ import (
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/jsonld"
 	"github.com/cayleygraph/quad/voc"
-	"github.com/epik-protocol/gateway/graph/memstore"
-	"github.com/epik-protocol/gateway/query/linkedql"
+	"github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/query/linkedql"
 	"github.com/stretchr/testify/require"
 )
 

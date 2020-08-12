@@ -27,7 +27,7 @@ import (
 	"io"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
 )
 
 type Procedure int8

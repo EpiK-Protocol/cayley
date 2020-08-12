@@ -2,11 +2,11 @@ package gateway
 
 import (
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	_ "github.com/epik-protocol/gateway/graph/memstore"
-	"github.com/epik-protocol/gateway/query/path"
-	_ "github.com/epik-protocol/gateway/writer"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 )
 
 var (

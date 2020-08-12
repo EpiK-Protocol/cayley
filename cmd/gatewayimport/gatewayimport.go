@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
 
 	// Load all supported quad formats.
 	"github.com/cayleygraph/quad"

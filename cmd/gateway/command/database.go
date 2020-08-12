@@ -14,9 +14,9 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/internal"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/internal"
 )
 
 const (

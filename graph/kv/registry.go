@@ -3,7 +3,7 @@ package kv
 import (
 	"strings"
 
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 	"github.com/hidal-go/hidalgo/kv"
 )
 

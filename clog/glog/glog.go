@@ -3,7 +3,7 @@ package glog
 import (
 	"fmt"
 
-	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
 	"github.com/golang/glog"
 )
 

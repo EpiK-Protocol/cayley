@@ -17,8 +17,8 @@ package badger
 import (
 	"os"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/kv"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/kv"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/hidal-go/hidalgo/kv/flat"
 	"github.com/hidal-go/hidalgo/kv/flat/badger"

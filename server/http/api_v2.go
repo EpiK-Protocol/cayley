@@ -28,15 +28,15 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/query"
-	"github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
 
 	// Writer is imported for writers to be registered
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	_ "github.com/epik-protocol/gateway/writer"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 )
 
 const (

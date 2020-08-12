@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Sort iterator orders values from it's subiterator.

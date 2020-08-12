@@ -9,7 +9,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/epik-protocol/gateway"
+    "github.com/epik-protocol/epik-gateway-backend"
     "github.com/cayleygraph/quad"
 )
 
@@ -42,13 +42,13 @@ func main() {
 To use other backends, you can empty-import them, eg
 
 ```go
-import _ "github.com/epik-protocol/gateway/graph/kv/bolt"
+import _ "github.com/epik-protocol/epik-gateway-backend/graph/kv/bolt"
 ```
 
 And use them with a call like
 
 ```go
-import "github.com/epik-protocol/gateway/graph"
+import "github.com/epik-protocol/epik-gateway-backend/graph"
 
 func open() {
   // Initialize the database
@@ -59,5 +59,5 @@ func open() {
 }
 ```
 
-More runnable examples are available in [examples](https://github.com/epik-protocol/gateway/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/examples/README.md) folder.
+More runnable examples are available in [examples](https://github.com/epik-protocol/epik-gateway-backend/tree/87c9c341848b59924a054ebc2dd0f2bf8c57c6a9/examples/README.md) folder.
 

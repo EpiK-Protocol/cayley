@@ -32,7 +32,7 @@ RUN packr2
 # Pass a Git short SHA as build information to be used for displaying version
 RUN SHORT_SHA=$(git rev-parse --short=12 HEAD); \
     go build \
-    -ldflags="-linkmode external -extldflags -static -X github.com/epik-protocol/gateway/version.GitHash=$SHORT_SHA" \
+    -ldflags="-linkmode external -extldflags -static -X github.com/epik-protocol/epik-gateway-backend/version.GitHash=$SHORT_SHA" \
     -a \
     -installsuffix cgo \
     -o /fs/bin/gateway \

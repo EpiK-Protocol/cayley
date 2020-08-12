@@ -17,7 +17,7 @@ package leveldb
 import (
 	"os"
 
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 	hkv "github.com/hidal-go/hidalgo/kv"
 	"github.com/hidal-go/hidalgo/kv/flat"
 	"github.com/hidal-go/hidalgo/kv/flat/leveldb"

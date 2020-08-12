@@ -11,7 +11,7 @@ Note: if you use a more recent version of Go locally, `goapp` get might
 accidentally copy the wrong files from the local `$GOPATH`.
 
 ```sh
-$ cd $GOPATH/src/github.com/epik-protocol/gateway/appengine
+$ cd $GOPATH/src/github.com/epik-protocol/epik-gateway-backend/appengine
 
 # check go version
 $ go version

@@ -6,8 +6,8 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/jsonld"
-	"github.com/epik-protocol/gateway/graph/refs"
-	"github.com/epik-protocol/gateway/query"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/query"
 	"github.com/piprate/json-gold/ld"
 )
 

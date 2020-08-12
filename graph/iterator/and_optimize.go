@@ -18,8 +18,8 @@ import (
 	"context"
 	"sort"
 
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Perhaps the most tricky file in this entire module. Really a method on the

@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 type ValueFilterFunc func(quad.Value) (bool, error)

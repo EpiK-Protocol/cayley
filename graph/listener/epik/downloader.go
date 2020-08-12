@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/epik-protocol/gateway/clog"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
 	"golang.org/x/sync/semaphore"
 )
 

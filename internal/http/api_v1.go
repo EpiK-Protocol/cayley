@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/epik-protocol/gateway/graph"
-	gatewayhttp "github.com/epik-protocol/gateway/server/http"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	gatewayhttp "github.com/epik-protocol/epik-gateway-backend/server/http"
 	"github.com/julienschmidt/httprouter"
 )
 

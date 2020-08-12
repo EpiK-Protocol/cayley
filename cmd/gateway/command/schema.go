@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/epik-protocol/gateway/internal/linkedql/schema"
+	"github.com/epik-protocol/epik-gateway-backend/internal/linkedql/schema"
 )
 
 func NewSchemaCommand() *cobra.Command {

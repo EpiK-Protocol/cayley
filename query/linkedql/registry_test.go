@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/cayleygraph/quad/voc"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/query"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 
 	"github.com/stretchr/testify/require"
 )

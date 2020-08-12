@@ -21,10 +21,10 @@ import (
 	"github.com/hidal-go/hidalgo/legacy/nosql"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 type Linkage struct {

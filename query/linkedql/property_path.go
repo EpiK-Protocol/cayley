@@ -6,8 +6,8 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 )
 
 // PropertyPathI is an interface to be used where a path of properties is expected.

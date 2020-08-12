@@ -21,8 +21,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	. "github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	. "github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 func iterated(s Shape) []int {

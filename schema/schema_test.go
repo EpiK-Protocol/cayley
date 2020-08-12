@@ -7,7 +7,7 @@ import (
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
 	"github.com/cayleygraph/quad/voc/rdf"
-	"github.com/epik-protocol/gateway/schema"
+	"github.com/epik-protocol/epik-gateway-backend/schema"
 )
 
 func init() {

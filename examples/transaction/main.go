@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/cayleygraph/quad"
-	gateway "github.com/epik-protocol/gateway"
+	gateway "github.com/epik-protocol/epik-gateway-backend"
 )
 
 func main() {

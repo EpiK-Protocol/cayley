@@ -23,11 +23,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphmock"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
-	. "github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphmock"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
+	. "github.com/epik-protocol/epik-gateway-backend/query/shape"
 )
 
 func intVal(v int) refs.Ref {

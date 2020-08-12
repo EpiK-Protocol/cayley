@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/memstore"
-	"github.com/epik-protocol/gateway/schema"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/schema"
 )
 
 func TestLoadLoop(t *testing.T) {

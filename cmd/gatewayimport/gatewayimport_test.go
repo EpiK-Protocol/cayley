@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/memstore"
-	chttp "github.com/epik-protocol/gateway/internal/http"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	chttp "github.com/epik-protocol/epik-gateway-backend/internal/http"
 	"github.com/phayes/freeport"
 	"github.com/stretchr/testify/require"
 )

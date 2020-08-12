@@ -30,7 +30,7 @@ For more information about the UI see: [UI Overview](usage/ui-overview.md)
 
 ### Download sample data
 
-[Sample Data](https://github.com/epik-protocol/gateway/raw/master/data/30kmoviedata.nq.gz)
+[Sample Data](https://github.com/epik-protocol/epik-gateway-backend/raw/master/data/30kmoviedata.nq.gz)
 
 ### Run Gateway
 

@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphtest"
-	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest/testutil"
 	"github.com/stretchr/testify/require"
 
 	"google.golang.org/appengine/aetest"

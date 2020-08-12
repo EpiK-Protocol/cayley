@@ -8,9 +8,9 @@ import (
 	"os"
 
 	"github.com/cayleygraph/quad"
-	gateway "github.com/epik-protocol/gateway"
-	"github.com/epik-protocol/gateway/graph"
-	_ "github.com/epik-protocol/gateway/graph/kv/bolt"
+	gateway "github.com/epik-protocol/epik-gateway-backend"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/kv/bolt"
 )
 
 func main() {

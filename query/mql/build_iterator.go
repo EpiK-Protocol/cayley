@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
 )
 
 func buildFixed(s string) shape.Shape {

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/graph/memstore"
 	"github.com/piprate/json-gold/ld"
 	"github.com/stretchr/testify/require"
 )

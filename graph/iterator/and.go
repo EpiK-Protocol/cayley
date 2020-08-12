@@ -18,7 +18,7 @@ package iterator
 import (
 	"context"
 
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // The And iterator. Consists of a number of subiterators, the primary of which will

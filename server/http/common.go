@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/epik-protocol/gateway/graph"
-	httpgraph "github.com/epik-protocol/gateway/graph/http"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	httpgraph "github.com/epik-protocol/epik-gateway-backend/graph/http"
 )
 
 func jsonResponse(w http.ResponseWriter, code int, err interface{}) {

@@ -22,11 +22,11 @@ import (
 	"testing"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
-	_ "github.com/epik-protocol/gateway/graph/memstore"
-	"github.com/epik-protocol/gateway/query"
-	_ "github.com/epik-protocol/gateway/writer"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest/testutil"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 
 	// register global namespace for tests
 	_ "github.com/cayleygraph/quad/voc/rdf"

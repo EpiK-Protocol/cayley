@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
 )
 
 func IntersectShapes(s1, s2 Shape) Shape {

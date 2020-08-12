@@ -14,10 +14,10 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc/rdf"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/refs"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 )
 
 func iriFlag(s string, err error) (quad.IRI, error) {

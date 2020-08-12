@@ -17,8 +17,8 @@ package path_test
 import (
 	"testing"
 
-	_ "github.com/epik-protocol/gateway/graph/memstore"
-	"github.com/epik-protocol/gateway/query/path/pathtest"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/query/path/pathtest"
 )
 
 func TestMorphisms(t *testing.T) {

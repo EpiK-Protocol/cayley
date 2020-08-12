@@ -3,7 +3,7 @@ package httpgraph
 import (
 	"net/http"
 
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 )
 
 type QuadStore interface {

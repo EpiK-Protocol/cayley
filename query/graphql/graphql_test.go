@@ -12,8 +12,8 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc/rdf"
-	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
-	"github.com/epik-protocol/gateway/graph/memstore"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest/testutil"
+	"github.com/epik-protocol/epik-gateway-backend/graph/memstore"
 )
 
 func iris(arr ...string) (out []quad.Value) {

@@ -21,9 +21,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphmock"
-	"github.com/epik-protocol/gateway/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphmock"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
 )
 
 func TestLinksTo(t *testing.T) {

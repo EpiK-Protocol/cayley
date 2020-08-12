@@ -17,9 +17,9 @@ package memstore
 import (
 	"context"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 var _ iterator.Shape = (*allIterator)(nil)

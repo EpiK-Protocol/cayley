@@ -17,11 +17,11 @@ import (
 	"github.com/cayleygraph/quad/voc/rdf"
 	"github.com/cayleygraph/quad/voc/rdfs"
 	"github.com/cayleygraph/quad/voc/schema"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/query/path"
-	"github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
 )
 
 const (

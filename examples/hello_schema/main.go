@@ -10,10 +10,10 @@ import (
 
 	"github.com/cayleygraph/quad"
 	"github.com/cayleygraph/quad/voc"
-	gateway "github.com/epik-protocol/gateway"
-	"github.com/epik-protocol/gateway/graph"
-	_ "github.com/epik-protocol/gateway/graph/kv/bolt"
-	"github.com/epik-protocol/gateway/schema"
+	gateway "github.com/epik-protocol/epik-gateway-backend"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/kv/bolt"
+	"github.com/epik-protocol/epik-gateway-backend/schema"
 
 	// Import RDF vocabulary definitions to be able to expand IRIs like rdf:label.
 	_ "github.com/cayleygraph/quad/voc/core"

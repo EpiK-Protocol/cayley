@@ -13,9 +13,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/internal/repl"
-	"github.com/epik-protocol/gateway/query"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/internal/repl"
+	"github.com/epik-protocol/epik-gateway-backend/query"
 )
 
 const (

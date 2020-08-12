@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 )
 
 var ErrParseMore = errors.New("query: more input required")

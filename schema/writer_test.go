@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/schema"
+	"github.com/epik-protocol/epik-gateway-backend/schema"
 )
 
 type quadSlice []quad.Quad

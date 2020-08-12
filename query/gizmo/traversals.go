@@ -23,10 +23,10 @@ import (
 	"github.com/dop251/goja"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/query"
-	"github.com/epik-protocol/gateway/query/path"
-	"github.com/epik-protocol/gateway/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
 )
 
 // pathObject is a Path object in Gizmo.

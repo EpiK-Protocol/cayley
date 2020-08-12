@@ -18,7 +18,7 @@ import (
 	"regexp"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 func newRegex(qs refs.Namer, sub Shape, re *regexp.Regexp, refs bool) Shape {

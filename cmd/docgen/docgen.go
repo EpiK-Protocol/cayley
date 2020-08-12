@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	packageName = flag.String("pck", "github.com/epik-protocol/gateway/query/gizmo", "")
+	packageName = flag.String("pck", "github.com/epik-protocol/epik-gateway-backend/query/gizmo", "")
 	out         = flag.String("o", "-", "output file")
 	in          = flag.String("i", "", "input file")
 )

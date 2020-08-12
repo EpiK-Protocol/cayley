@@ -15,11 +15,11 @@ import (
 	"github.com/dennwc/graphql/language/parser"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
-	"github.com/epik-protocol/gateway/query"
-	"github.com/epik-protocol/gateway/query/path"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	"github.com/epik-protocol/epik-gateway-backend/query/path"
 )
 
 const Name = "graphql"

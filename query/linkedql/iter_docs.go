@@ -3,7 +3,7 @@ package linkedql
 import (
 	"context"
 
-	"github.com/epik-protocol/gateway/query"
+	"github.com/epik-protocol/epik-gateway-backend/query"
 	"github.com/piprate/json-gold/ld"
 )
 

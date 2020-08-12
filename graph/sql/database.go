@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	graphlog "github.com/epik-protocol/gateway/graph/log"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	graphlog "github.com/epik-protocol/epik-gateway-backend/graph/log"
 )
 
 var types = make(map[string]Registration)

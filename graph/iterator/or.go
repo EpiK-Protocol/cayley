@@ -24,7 +24,7 @@ package iterator
 import (
 	"context"
 
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 type Or struct {

@@ -23,12 +23,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphtest"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
-	"github.com/epik-protocol/gateway/query/shape"
-	"github.com/epik-protocol/gateway/writer"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/query/shape"
+	"github.com/epik-protocol/epik-gateway-backend/writer"
 )
 
 // This is a simple test graph.

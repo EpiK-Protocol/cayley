@@ -24,7 +24,7 @@ Welcome to the Gateway Manual! Gateway is an open-source graph database designed
 * [Configuration](configuration.md)
 * [Migration](usage/migration.md)
 * [Usage as Container](deployment/container.md)
-* [Usage in Kubernetes](https://github.com/epik-protocol/gateway/tree/06f7114d4ad1725d58f16fc5fdc9394f293c3539/docs/k8s.md)
+* [Usage in Kubernetes](https://github.com/epik-protocol/epik-gateway-backend/tree/06f7114d4ad1725d58f16fc5fdc9394f293c3539/docs/k8s.md)
 
 ## Developers
 

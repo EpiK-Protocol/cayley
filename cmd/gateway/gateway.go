@@ -25,19 +25,19 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/epik-protocol/gateway/cmd/gateway/command"
+	"github.com/epik-protocol/epik-gateway-backend/cmd/gateway/command"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/clog"
-	_ "github.com/epik-protocol/gateway/clog/glog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/version"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	_ "github.com/epik-protocol/epik-gateway-backend/clog/glog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/version"
 
 	// Load supported backends
-	_ "github.com/epik-protocol/gateway/graph/all"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/all"
 
 	// Load all supported quad formats.
 	_ "github.com/cayleygraph/quad/dot"
@@ -49,16 +49,16 @@ import (
 	_ "github.com/cayleygraph/quad/pquads"
 
 	// Load writer registry
-	_ "github.com/epik-protocol/gateway/writer"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 
 	// Load supported query languages
-	_ "github.com/epik-protocol/gateway/query/gizmo"
-	_ "github.com/epik-protocol/gateway/query/graphql"
-	_ "github.com/epik-protocol/gateway/query/mql"
-	_ "github.com/epik-protocol/gateway/query/sexp"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/gizmo"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/graphql"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/mql"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/sexp"
 
 	// Register listener
-	_ "github.com/epik-protocol/gateway/graph/listener/epik"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/listener/epik"
 )
 
 var (

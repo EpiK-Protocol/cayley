@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/epik-protocol/gateway/query/linkedql"
+	"github.com/epik-protocol/epik-gateway-backend/query/linkedql"
 )
 
 func init() {

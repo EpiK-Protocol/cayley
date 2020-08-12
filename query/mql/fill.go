@@ -19,7 +19,7 @@ import (
 	"sort"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 )
 
 func (q *Query) treeifyResult(tags map[string]graph.Ref) map[ResultPath]string {

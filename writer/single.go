@@ -16,7 +16,7 @@ package writer
 
 import (
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
 )
 
 func init() {

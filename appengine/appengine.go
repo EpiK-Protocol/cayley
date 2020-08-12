@@ -21,17 +21,17 @@ import (
 	"os"
 	"time"
 
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/internal/http"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/internal/http"
 
-	_ "github.com/epik-protocol/gateway/graph/gaedatastore"
-	_ "github.com/epik-protocol/gateway/writer"
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/gaedatastore"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 
 	// Register supported query languages
-	_ "github.com/epik-protocol/gateway/query/gizmo"
-	_ "github.com/epik-protocol/gateway/query/graphql"
-	_ "github.com/epik-protocol/gateway/query/mql"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/gizmo"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/graphql"
+	_ "github.com/epik-protocol/epik-gateway-backend/query/mql"
 )
 
 var (

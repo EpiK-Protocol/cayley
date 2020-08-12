@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Skip iterator will skip certain number of values from primary iterator.

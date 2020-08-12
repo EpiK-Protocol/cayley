@@ -26,11 +26,11 @@ import (
 	"google.golang.org/appengine/datastore"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	httpgraph "github.com/epik-protocol/gateway/graph/http"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	httpgraph "github.com/epik-protocol/epik-gateway-backend/graph/http"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 var _ httpgraph.QuadStore = (*QuadStore)(nil)

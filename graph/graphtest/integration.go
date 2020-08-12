@@ -26,12 +26,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/graphtest/testutil"
-	"github.com/epik-protocol/gateway/internal"
-	"github.com/epik-protocol/gateway/query"
-	"github.com/epik-protocol/gateway/query/gizmo"
-	_ "github.com/epik-protocol/gateway/writer"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/graphtest/testutil"
+	"github.com/epik-protocol/epik-gateway-backend/internal"
+	"github.com/epik-protocol/epik-gateway-backend/query"
+	"github.com/epik-protocol/epik-gateway-backend/query/gizmo"
+	_ "github.com/epik-protocol/epik-gateway-backend/writer"
 )
 
 const (

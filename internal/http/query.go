@@ -26,7 +26,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/epik-protocol/gateway/query"
+	"github.com/epik-protocol/epik-gateway-backend/query"
 )
 
 type SuccessQueryWrapper struct {

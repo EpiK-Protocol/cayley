@@ -18,7 +18,7 @@ Follow the instructions for running Gateway locally:
 
 ```text
 # clone project
-git clone https://github.com/epik-protocol/gateway
+git clone https://github.com/epik-protocol/epik-gateway-backend
 cd gateway
 
 # Download dependencies
@@ -71,7 +71,7 @@ If your version of Go &lt; 1.13, you need to run:
 export GO111MODULE=on
 ```
 
-If you just want to build Gateway and check out the source, or use it as a library, a simple `go get github.com/epik-protocol/gateway` will work!
+If you just want to build Gateway and check out the source, or use it as a library, a simple `go get github.com/epik-protocol/epik-gateway-backend` will work!
 
 But suppose you want to contribute back on your own fork \(and pull requests are welcome!\). A good way to do this is to set up your $GOPATH and then...
 
@@ -85,7 +85,7 @@ git clone https://github.com/$GITHUBUSERNAME/gateway
 
 ```text
 cd gateway
-git remote add upstream http://github.com/epik-protocol/gateway
+git remote add upstream http://github.com/epik-protocol/epik-gateway-backend
 ```
 
 So that you can keep up with the latest changes by periodically running

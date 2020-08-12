@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/epik-protocol/gateway/clog"
-	"github.com/epik-protocol/gateway/graph"
-	graphlog "github.com/epik-protocol/gateway/graph/log"
-	csql "github.com/epik-protocol/gateway/graph/sql"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	graphlog "github.com/epik-protocol/epik-gateway-backend/graph/log"
+	csql "github.com/epik-protocol/epik-gateway-backend/graph/sql"
 	"github.com/jackc/pgx"
 	_ "github.com/jackc/pgx/stdlib" // registers "pgx" driver
 )

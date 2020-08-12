@@ -31,7 +31,7 @@ import (
 	"time"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 type Operator int

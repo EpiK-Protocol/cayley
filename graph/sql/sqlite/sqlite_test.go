@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/graph/sql/sqltest"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/graph/sql/sqltest"
 )
 
 func makeSqlite(t testing.TB) (string, graph.Options, func()) {

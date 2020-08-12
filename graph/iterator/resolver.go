@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // A Resolver iterator consists of it's order, an index (where it is in the,

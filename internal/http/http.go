@@ -23,12 +23,12 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/epik-protocol/gateway/graph"
-	"github.com/epik-protocol/gateway/internal/gephi"
-	gatewayhttp "github.com/epik-protocol/gateway/server/http"
+	"github.com/epik-protocol/epik-gateway-backend/graph"
+	"github.com/epik-protocol/epik-gateway-backend/internal/gephi"
+	gatewayhttp "github.com/epik-protocol/epik-gateway-backend/server/http"
 )
 
-var ui = packr.New("UI", "../../ui")
+var ui = packr.New("UI", "../../ui-demo")
 
 func jsonResponse(w http.ResponseWriter, code int, err interface{}) {
 	w.Header().Set("Content-Type", "application/json")

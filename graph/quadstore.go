@@ -28,8 +28,8 @@ import (
 	"reflect"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/iterator"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Ref defines an opaque "quad store reference" type. However the backend wishes

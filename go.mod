@@ -1,4 +1,4 @@
-module github.com/epik-protocol/gateway
+module github.com/epik-protocol/epik-gateway-backend
 
 go 1.12
 

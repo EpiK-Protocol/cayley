@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Count iterator returns one element with size of underlying iterator.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cayleygraph/quad"
-	"github.com/epik-protocol/gateway/graph/refs"
+	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
 )
 
 // Chain is a chain-enabled helper to setup iterator execution.

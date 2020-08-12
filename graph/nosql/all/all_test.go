@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/hidal-go/hidalgo/legacy/nosql/nosqltest/all"
 
-	"github.com/epik-protocol/gateway/graph/nosql/nosqltest"
+	"github.com/epik-protocol/epik-gateway-backend/graph/nosql/nosqltest"
 	hnosqltest "github.com/hidal-go/hidalgo/legacy/nosql/nosqltest"
 )
 
