@@ -10,6 +10,11 @@ import (
 
 type BigInt = big2.Int
 
+type APIMessage struct {
+	Cid     cid.Cid
+	Message *Message
+}
+
 type Message struct {
 	Version int64
 
@@ -38,8 +43,3 @@ type BlockMessages struct {
 
 	Cids []cid.Cid
 }
-
-// func (bm *BlockMessages) UnmarshalJSON(b []byte) error {
-// 	fmt.Println("unmarshal block messages:", string(b))
-// 	return nil
-// }

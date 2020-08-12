@@ -35,6 +35,8 @@ type EpikClient interface {
 	ChainGetTipSetByHeight(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)
 	ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error)
 	ClientQuery(ctx context.Context, roots []cid.Cid) ([]FileResp, error)
+	ChainGetParentMessages(ctx context.Context, blockCid cid.Cid) ([]APIMessage, error)
+	ChainGetMessage(context.Context, cid.Cid) (*Message, error)
 }
 
 type EpikClientStruct struct {
@@ -43,6 +45,8 @@ type EpikClientStruct struct {
 		ChainGetTipSetByHeight func(context.Context, abi.ChainEpoch, TipSetKey) (*TipSet, error)   `perm:"read"`
 		ChainGetBlockMessages  func(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) `perm:"read"`
 		ClientQuery            func(ctx context.Context, roots []cid.Cid) ([]FileResp, error)      `perm:"read"`
+		ChainGetParentMessages func(ctx context.Context, blockCid cid.Cid) ([]APIMessage, error)   `perm:"read"`
+		ChainGetMessage        func(context.Context, cid.Cid) (*Message, error)                    `perm:"read"`
 	}
 }
 
@@ -56,6 +60,14 @@ func (e *EpikClientStruct) ChainGetTipSetByHeight(ctx context.Context, epoch abi
 
 func (e *EpikClientStruct) ChainGetBlockMessages(ctx context.Context, blockCid cid.Cid) (*BlockMessages, error) {
 	return e.Internal.ChainGetBlockMessages(ctx, blockCid)
+}
+
+func (e *EpikClientStruct) ChainGetParentMessages(ctx context.Context, blockCid cid.Cid) ([]APIMessage, error) {
+	return e.Internal.ChainGetParentMessages(ctx, blockCid)
+}
+
+func (e *EpikClientStruct) ChainGetMessage(ctx context.Context, blockCid cid.Cid) (*Message, error) {
+	return e.Internal.ChainGetMessage(ctx, blockCid)
 }
 
 func (e *EpikClientStruct) ClientQuery(ctx context.Context, roots []cid.Cid) ([]FileResp, error) {

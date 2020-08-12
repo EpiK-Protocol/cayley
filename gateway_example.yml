@@ -8,6 +8,10 @@ store:
   # backend-specific options
   options:
     nosync: false
+data:
+  source: "epik"
+epik:
+  address: "/ip4/{ip}/tcp/{port}/http"
 query:
   timeout: 30s
 load:

@@ -2,10 +2,6 @@
 main
 *.test
 *.peg.go
-cayley.cfg
-cayley.yml
-cayley.json
-.cayley_history
 .DS_Store
 
 dist/
@@ -13,4 +9,4 @@ vendor/
 ui/
 packrd/packed-*
 # The build binary
-/cayley
+/gateway

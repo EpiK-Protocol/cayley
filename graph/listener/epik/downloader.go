@@ -56,6 +56,12 @@ func (d *downloader) download(ctx context.Context, key, url string) error {
 				d.failed++
 				return
 			}
+			body, err = preprocess(body)
+			if err != nil {
+				clog.Errorf("failed to preprocess data from %s(%s), error: %v", key, url, err)
+				d.failed++
+				return
+			}
 			d.mu.Lock()
 			d.result[key] = body
 			d.mu.Unlock()

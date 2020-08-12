@@ -75,6 +75,10 @@ func (k TipSetKey) Cids() []cid.Cid {
 	return cids
 }
 
+func DecodeKey(encoded []byte) ([]cid.Cid, error) {
+	return decodeKey(encoded)
+}
+
 func decodeKey(encoded []byte) ([]cid.Cid, error) {
 	// To avoid reallocation of the underlying array, estimate the number of CIDs to be extracted
 	// by dividing the encoded length by the expected CID length.

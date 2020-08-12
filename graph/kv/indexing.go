@@ -540,7 +540,9 @@ func (qs *QuadStore) applyAddDeltas(tx kv.Tx, in []graph.Delta, deltas *graphlog
 			}
 		}
 		links = append(links, link)
-		lkCids = append(lkCids, in[q.Ind].Cid)
+		if len(in) != 0 {
+			lkCids = append(lkCids, in[q.Ind].Cid)
+		}
 	}
 	qadd = nil
 	deltas.QuadAdd = nil
@@ -769,11 +771,10 @@ func (qs *QuadStore) indexNode(tx kv.Tx, p *proto.Primitive, val quad.Value) err
 	return qs.addToLog(tx, p)
 }
 
-// len(links) == len(cids)
 func (qs *QuadStore) indexLinks(ctx context.Context, tx kv.Tx, links []proto.Primitive, cids []string) error {
 	ctop := make(map[string]uint64)
 	for i, p := range links {
-		if len(cids[i]) > 0 {
+		if len(cids) > 0 && len(cids[i]) > 0 {
 			ctop[cids[i]] = p.ID
 		}
 		if err := qs.indexLink(tx, &p); err != nil {

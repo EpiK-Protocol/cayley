@@ -149,14 +149,11 @@ func (s *Listener) syncDeltas(ctx context.Context, start, end int64) error {
 				clog.Errorf("failed to unmarshal params at tipset %d, error is: %v", ts.Height, err)
 				return err
 			}
-
-			for _, deal := range params.Deals {
-				cids = append(cids, deal.Proposal.PieceCID)
-			}
+			cids = append(cids, params.RootCID)
 		}
 
 		// add to QuadStore
-		// // delete
+		// TODO: delete
 		// deltas, err := parseDeletes(msgs.Deletes)
 		// if err != nil {
 		// 	clog.Errorf("failed to parse deleted cids at epoch %d, error is: %v", current, err)

@@ -19,7 +19,7 @@ require (
 	github.com/dop251/goja v0.0.0-20190105122144-6d5bf35058fa
 	github.com/filecoin-project/go-address v0.0.2-0.20200504173055-8b6f2fb2b3ef
 	github.com/filecoin-project/go-jsonrpc v0.1.1
-	github.com/filecoin-project/specs-actors v0.8.1-0.20200723200253-a3c01bc62f99
+	github.com/filecoin-project/specs-actors v0.0.0-00010101000000-000000000000
 	github.com/flimzy/diff v0.1.6 // indirect
 	github.com/fsouza/go-dockerclient v1.2.2
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
@@ -47,7 +47,6 @@ require (
 	github.com/multiformats/go-multiaddr v0.2.2
 	github.com/multiformats/go-multiaddr-net v0.1.5
 	github.com/multiformats/go-multihash v0.0.14
-	github.com/multiformats/go-varint v0.0.5
 	github.com/onsi/ginkgo v1.12.1 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/opencontainers/selinux v1.0.0 // indirect
@@ -87,3 +86,5 @@ require (
 )
 
 replace github.com/Sirupsen/logrus => github.com/Sirupsen/logrus v1.0.1
+
+replace github.com/filecoin-project/specs-actors => ../specs-actors
