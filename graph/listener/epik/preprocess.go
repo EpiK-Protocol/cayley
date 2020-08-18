@@ -5,6 +5,16 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+
+	"github.com/epik-protocol/epik-gateway-backend/clog"
+)
+
+var escaper = strings.NewReplacer(
+	"\\", "\\\\",
+	"\"", "\\\"",
+	"\n", "\\n",
+	"\r", "\\r",
+	"\t", "\\t",
 )
 
 func preprocess(src []byte) ([]byte, error) {
@@ -12,16 +22,15 @@ func preprocess(src []byte) ([]byte, error) {
 	sc := bufio.NewScanner(bytes.NewReader(src))
 	for sc.Scan() {
 		a := strings.SplitN(sc.Text(), " - ", 4)
-		if len(a) != 3 {
-			return nil, fmt.Errorf("incorrect column num of line: %s", sc.Text())
+		if len(a) != 3 && len(a) != 4 {
+			clog.Errorf("illegal line: %s", sc.Text())
+			continue
 		}
-		if strings.Contains(a[2], " ") {
-			if (a[2][0] == '<' && a[2][len(a[2])-1] == '>') ||
-				(a[2][0] == '"' && a[2][len(a[2])-1] == '"') {
-				// do nothing
-			} else {
-				a[2] = `"` + a[2] + `"`
+		for i := range a {
+			if notRaw(a[i]) {
+				continue
 			}
+			a[i] = `"` + escaper.Replace(a[i]) + `"`
 		}
 		_, err := fmt.Fprintln(&buf, strings.Join(append(a, "."), " "))
 		if err != nil {
@@ -29,4 +38,19 @@ func preprocess(src []byte) ([]byte, error) {
 		}
 	}
 	return buf.Bytes(), nil
+}
+
+func notRaw(v string) bool {
+	if len(v) > 2 {
+		if (v[0] == '<' && v[len(v)-1] == '>') || (v[0] == '"' && v[len(v)-1] == '"') {
+			return true
+		} else if v[:2] == "_:" {
+			return true
+		} else if i := strings.Index(v, `"^^<`); i > 0 && v[0] == '"' && v[len(v)-1] == '>' {
+			return true
+		} else if i := strings.Index(v, `"@`); i > 0 && v[0] == '"' && v[len(v)-1] != '"' {
+			return true
+		}
+	}
+	return false
 }
