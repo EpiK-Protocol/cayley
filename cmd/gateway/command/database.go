@@ -28,7 +28,7 @@ const (
 
 	KeyLoadBatch = "load.batch"
 
-	KeyDataSource = "data.source"
+	KeyDataSource = "datasource.name"
 )
 
 const (
