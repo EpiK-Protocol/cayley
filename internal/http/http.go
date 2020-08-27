@@ -28,7 +28,7 @@ import (
 	gatewayhttp "github.com/epik-protocol/epik-gateway-backend/server/http"
 )
 
-var ui = packr.New("UI", "../../ui-demo")
+var ui = packr.New("UI", "../../ui")
 
 func jsonResponse(w http.ResponseWriter, code int, err interface{}) {
 	w.Header().Set("Content-Type", "application/json")
