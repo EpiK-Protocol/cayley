@@ -30,9 +30,12 @@ go build ./cmd/gateway
 # Try the binary
 ./gateway help
 
-# Quick test
-./gateway repl -i data/testdata.nq
+# init
+./gateway init --config configurations/persisted.json
 
-# Run the web frontend
-./gateway http -i data/demo/marvel_demo.nq
+# First run with data loading
+./gateway http --config configurations/persisted.json -i data/demo/marvel_demo.nq
+
+# Run
+./gateway http --config configurations/persisted.json
 ```
