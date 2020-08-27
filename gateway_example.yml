@@ -10,7 +10,14 @@ store:
     nosync: false
 datasource:
   name: "epik"
-  address: "/ip4/{ip}/tcp/{port}/http"
+  options:
+    address: "/ip4/{ip}/tcp/{port}/http"
+    # token: "Ea3gh49ae"
+# searcher:
+#   name: "elasticsearch"
+#   options:
+#     addresses:
+#       - http://localhost:9200
 query:
   timeout: 30s
 load:

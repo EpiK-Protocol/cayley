@@ -785,3 +785,7 @@ func (qs *QuadStore) sizeForIterator(dir quad.Direction, hash NodeHash) int64 {
 	qs.sizes.Put(hash.String()+string(dir.Prefix()), size)
 	return size
 }
+
+func (qs *QuadStore) SyncToSearcher(context.Context, graph.Searcher) {
+
+}

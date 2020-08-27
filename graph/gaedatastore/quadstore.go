@@ -581,3 +581,7 @@ func (qs *QuadStore) QuadDirection(val graph.Ref, dir quad.Direction) graph.Ref 
 	sub := t.Hash[offset : offset+(quad.HashSize*2)]
 	return &Token{Kind: nodeKind, Hash: sub}
 }
+
+func (qs *QuadStore) SyncToSearcher(context.Context, graph.Searcher) {
+
+}

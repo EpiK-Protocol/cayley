@@ -28,7 +28,9 @@ const (
 
 	KeyLoadBatch = "load.batch"
 
-	KeyDataSource = "datasource.name"
+	KeyDataSource      = "datasource.name"
+	KeySearcher        = "searcher.name"
+	KeySearcherOptions = "searcher.options"
 )
 
 const (
@@ -205,7 +207,6 @@ func initDatabase() error {
 func openDatabase() (*graph.Handle, error) {
 	name := viper.GetString(KeyBackend)
 	path := viper.GetString(KeyAddress)
-	src := viper.GetString(KeyDataSource)
 	opts := graph.Options(viper.GetStringMap(KeyOptions))
 	qs, err := graph.NewQuadStore(name, path, opts)
 	if err != nil {
@@ -216,15 +217,30 @@ func openDatabase() (*graph.Handle, error) {
 		return nil, err
 	}
 	h := &graph.Handle{QuadStore: qs, QuadWriter: qw}
-
+	// epik
+	src := viper.GetString(KeyDataSource)
 	if len(src) > 0 {
+		//TODO: epik options
 		listener, err := graph.NewListener(src, qs)
-		if err == nil {
-			h.Listener = listener
-			h.Start()
-		} else {
-			clog.Warningf("failed to start listener: %s, error: %v", src, err)
+		if err != nil {
+			h.Close()
+			clog.Errorf("failed to start listener: %s, error: %v", src, err)
+			return nil, err
 		}
+		h.Listener = listener
+		h.Start()
+	}
+	// node searcher
+	sch := viper.GetString(KeySearcher)
+	if len(sch) > 0 {
+		schOpts := graph.Options(viper.GetStringMap(KeySearcherOptions))
+		searcher, err := graph.NewSearcher(sch, qs, schOpts)
+		if err != nil {
+			h.Close()
+			clog.Errorf("failed to start node searcher: %s, error: %v", sch, err)
+			return nil, err
+		}
+		h.Searcher = searcher
 	}
 	return h, nil
 }

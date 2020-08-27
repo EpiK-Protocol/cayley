@@ -238,3 +238,7 @@ func (qs *Store) Stats(ctx context.Context, exact bool) (graph.Stats, error) {
 		Quads: refs.Size{Value: int64(len(qs.Data)), Exact: true},
 	}, nil
 }
+
+func (qs *Store) SyncToSearcher(context.Context, graph.Searcher) {
+
+}

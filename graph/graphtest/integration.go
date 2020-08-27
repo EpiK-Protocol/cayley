@@ -506,7 +506,7 @@ func checkQueries(t *testing.T, qs graph.QuadStore, timeout time.Duration) {
 				t.SkipNow()
 			}
 			start := time.Now()
-			ses := gizmo.NewSession(qs)
+			ses := gizmo.NewSession(qs, nil)
 			ctx := context.Background()
 			if timeout > 0 {
 				var cancel func()
@@ -583,7 +583,7 @@ func benchmarkQueries(b *testing.B, gen testutil.DatabaseFunc) {
 						ctx, cancel = context.WithTimeout(ctx, timeout)
 						defer cancel()
 					}
-					ses := gizmo.NewSession(qs)
+					ses := gizmo.NewSession(qs, nil)
 					b.StartTimer()
 					it, err := ses.Execute(ctx, bench.query, query.Options{
 						Collation: query.Raw,

@@ -19,8 +19,8 @@ import (
 type RepoType int
 
 const (
-	flagEpikAddr  = "datasource.address"
-	flagEpikToken = "datasource.token"
+	flagEpikAddr  = "datasource.options.address"
+	flagEpikToken = "datasource.options.token"
 
 	envFullNodeInfo = "FULLNODE_API_INFO"
 )

@@ -40,17 +40,18 @@ const Name = "gizmo"
 func init() {
 	query.RegisterLanguage(query.Language{
 		Name: Name,
-		Session: func(qs graph.QuadStore) query.Session {
-			return NewSession(qs)
+		Session: func(qs graph.QuadStore, gns graph.Searcher) query.Session {
+			return NewSession(qs, gns)
 		},
 	})
 }
 
-func NewSession(qs graph.QuadStore) *Session {
+func NewSession(qs graph.QuadStore, gns graph.Searcher) *Session {
 	s := &Session{
 		ctx: context.Background(),
 		sch: schema.NewConfig(),
 		qs:  qs, limit: -1,
+		gns: gns,
 	}
 	if err := s.buildEnv(); err != nil {
 		panic(err)
@@ -84,6 +85,7 @@ func (fieldNameMapper) MethodName(t reflect.Type, m reflect.Method) string {
 
 type Session struct {
 	qs  graph.QuadStore
+	gns graph.Searcher
 	vm  *goja.Runtime
 	ns  voc.Namespaces
 	sch *schema.Config

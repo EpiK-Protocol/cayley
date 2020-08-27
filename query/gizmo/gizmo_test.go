@@ -52,7 +52,7 @@ func makeTestSession(data []quad.Quad) *Session {
 	for _, t := range data {
 		w.AddQuad(t)
 	}
-	return NewSession(qs)
+	return NewSession(qs, nil)
 }
 
 func intVal(v int) string {

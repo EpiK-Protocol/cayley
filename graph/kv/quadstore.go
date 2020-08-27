@@ -470,6 +470,100 @@ func (qs *QuadStore) getPrimitives(ctx context.Context, vals []uint64) ([]*proto
 	return qs.getPrimitivesFromLog(ctx, tx, vals)
 }
 
+func (qs *QuadStore) SyncToSearcher(ctx context.Context, s graph.Searcher) {
+	val, err := s.GetMeta("maxid")
+	if err != nil {
+		clog.Warningf("[kv] Error getting searcher meta: %v", err)
+		return
+	}
+	fv, ok := val.(float64)
+	if !ok {
+		clog.Warningf("[kv] Unexpected maxid: %T", val)
+		return
+	}
+	start := int64(fv)
+
+	var last int64
+	err = kv.View(qs.db, func(tx kv.Tx) (err error) {
+		last, err = qs.getMetaIntTx(ctx, tx, "horizon")
+		return err
+	})
+	if err != nil {
+		clog.Warningf("[kv] Error getting last id: %s", err)
+		return
+	}
+
+	cur := start + 1
+	clog.Infof("[kv] Update searcher from %d to %d", cur, last)
+	for ; cur <= last; cur++ {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		var p *proto.Primitive
+		err = kv.View(qs.db, func(tx kv.Tx) (err error) {
+			p, err = qs.getPrimitiveFromLog(ctx, tx, uint64(cur))
+			if p != nil && p.Deleted {
+				p = nil
+			}
+			return err
+		})
+		if err != nil {
+			clog.Warningf("[kv] Error getting primitive by id %d: %s", cur, err)
+			return
+		}
+		if p != nil && p.IsNode() {
+			v, err := pquads.UnmarshalValue(p.Value)
+			if err != nil {
+				clog.Warningf("[kv] Error unmarshalling node for id %d: %s", cur, err)
+				return
+			}
+
+			node := graph.Node{
+				ID: cur,
+			}
+			switch v := v.(type) {
+			case quad.IRI:
+				node.Type = "iri"
+				node.Content = v.String()
+			case quad.BNode:
+				node.Type = "bnode"
+				node.Content = v.String()
+			case quad.String:
+				node.Type = "string"
+				node.Content = v.Native().(string)
+				if node.NotIndex() {
+					continue
+				}
+			default:
+				clog.Warningf("ignore unexpected value type: %T", v)
+				continue
+			}
+			err = s.IndexNodes([]graph.Node{node})
+			if err != nil {
+				data, _ := json.Marshal(node)
+				clog.Warningf("[kv] Error indexing node `%s`: %s", string(data), err)
+				return
+			}
+		}
+
+		err = s.SetMeta(map[string]interface{}{
+			"maxid": cur,
+		})
+		if err != nil {
+			clog.Warningf("[kv] Error updating meta(maxid=%d): %s", cur, err)
+			return
+		}
+
+		if (cur-start)%500 == 0 {
+			clog.Infof("[kv] Update searcher to id: %d", cur)
+		}
+	}
+	clog.Infof("[kv] Update searcher to id: %d", cur-1)
+}
+
 type Int64Value uint64
 
 func (v Int64Value) Key() interface{} { return v }

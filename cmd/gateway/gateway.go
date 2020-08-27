@@ -59,6 +59,9 @@ import (
 
 	// Register listener
 	_ "github.com/epik-protocol/epik-gateway-backend/graph/listener/epik"
+
+	// Register node searcher
+	_ "github.com/epik-protocol/epik-gateway-backend/graph/searcher/es"
 )
 
 var (

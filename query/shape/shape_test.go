@@ -82,6 +82,9 @@ func (ValLookup) QuadDirection(_ refs.Ref, _ quad.Direction) refs.Ref {
 func (ValLookup) Type() string {
 	panic("not implemented")
 }
+func (ValLookup) SyncToSearcher(context.Context, graph.Searcher) {
+
+}
 
 func emptySet() Shape {
 	return NodesFrom{

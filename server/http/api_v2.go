@@ -530,7 +530,7 @@ func (api *APIv2) ServeQuery(w http.ResponseWriter, r *http.Request) {
 		errFunc(w, errors.New("HTTP interface is not supported for this query language"))
 		return
 	}
-	ses := l.Session(h.QuadStore)
+	ses := l.Session(h.QuadStore, h.Searcher)
 	var qu string
 	if r.Method == "GET" {
 		qu = vals.Get("qu")

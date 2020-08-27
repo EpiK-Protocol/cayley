@@ -16,11 +16,13 @@ package memstore
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/cayleygraph/quad"
+	"github.com/epik-protocol/epik-gateway-backend/clog"
 	"github.com/epik-protocol/epik-gateway-backend/graph"
 	"github.com/epik-protocol/epik-gateway-backend/graph/iterator"
 	"github.com/epik-protocol/epik-gateway-backend/graph/refs"
@@ -622,3 +624,70 @@ func (qs *QuadStore) NodesAllIterator() iterator.Shape {
 }
 
 func (qs *QuadStore) Close() error { return nil }
+
+func (qs *QuadStore) SyncToSearcher(ctx context.Context, s graph.Searcher) {
+	val, err := s.GetMeta("maxid")
+	if err != nil {
+		clog.Warningf("[memstore] Error getting searcher meta: %v", err)
+		return
+	}
+	fv, ok := val.(float64)
+	if !ok {
+		clog.Warningf("[memstore] Unexpected maxid: %T", val)
+		return
+	}
+
+	start := int64(fv)
+	cur := start + 1
+	clog.Infof("[kv] Update searcher from %d to %d", cur, qs.last)
+	for ; cur <= qs.last; cur++ {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		v := qs.lookupVal(cur)
+		if v != nil {
+			node := graph.Node{
+				ID: cur,
+			}
+			switch v.(type) {
+			case quad.IRI:
+				node.Type = "iri"
+				node.Content = v.String()
+			case quad.BNode:
+				node.Type = "bnode"
+				node.Content = v.String()
+			case quad.String:
+				node.Type = "string"
+				node.Content = v.Native().(string)
+				if node.NotIndex() {
+					continue
+				}
+			default:
+				clog.Warningf("ignore unexpected value type: %T", v)
+				continue
+			}
+			err = s.IndexNodes([]graph.Node{node})
+			if err != nil {
+				data, _ := json.Marshal(node)
+				clog.Warningf("[memstore] Error indexing node `%s`: %s", string(data), err)
+				return
+			}
+		}
+
+		err = s.SetMeta(map[string]interface{}{
+			"maxid": cur,
+		})
+		if err != nil {
+			clog.Warningf("[memstore] Error updating meta(maxid=%d): %s", cur, err)
+			return
+		}
+
+		if (cur-start)%500 == 0 {
+			clog.Infof("[memstore] Update searcher to id: %d", cur)
+		}
+	}
+	clog.Infof("[memstore] Update searcher to id: %d", cur-1)
+}

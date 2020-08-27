@@ -7,6 +7,15 @@ main
 dist/
 vendor/
 ui/
+ui-demo/
 packrd/packed-*
 # The build binary
 /gateway
+data/marvel/
+data/30kmoviedata.nq
+data/marvel_sample.nq
+data/regex
+data/testdat_epik.nq
+config.json
+gateway.db/
+graph/listener/epik/client_test.go

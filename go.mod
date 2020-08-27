@@ -17,6 +17,7 @@ require (
 	github.com/docker/docker v0.7.3-0.20180412203414-a422774e593b // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/dop251/goja v0.0.0-20190105122144-6d5bf35058fa
+	github.com/elastic/go-elasticsearch/v7 v7.9.0
 	github.com/filecoin-project/go-address v0.0.2-0.20200504173055-8b6f2fb2b3ef
 	github.com/filecoin-project/go-jsonrpc v0.1.1
 	github.com/filecoin-project/specs-actors v0.0.0-00010101000000-000000000000

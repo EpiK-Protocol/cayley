@@ -752,3 +752,7 @@ func (qs *QuadStore) getSize(col string, constraints []nosql.FieldFilter) (int64
 	qs.sizes.Put(key, int64(size))
 	return int64(size), nil
 }
+
+func (qs *QuadStore) SyncToSearcher(context.Context, graph.Searcher) {
+
+}

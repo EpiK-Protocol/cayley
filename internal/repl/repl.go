@@ -95,7 +95,7 @@ func Repl(ctx context.Context, h *graph.Handle, queryLanguage string, timeout ti
 	if l == nil || l.Session == nil {
 		return fmt.Errorf("unsupported query language: %q", queryLanguage)
 	}
-	ses := l.Session(h.QuadStore)
+	ses := l.Session(h.QuadStore, h.Searcher)
 
 	term, err := terminal(history)
 	if os.IsNotExist(err) {

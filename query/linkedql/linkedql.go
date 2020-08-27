@@ -24,7 +24,7 @@ func init() {
 	// register the language
 	query.RegisterLanguage(query.Language{
 		Name: Name,
-		Session: func(qs graph.QuadStore) query.Session {
+		Session: func(qs graph.QuadStore, ns graph.Searcher) query.Session {
 			return NewSession(qs)
 		},
 	})

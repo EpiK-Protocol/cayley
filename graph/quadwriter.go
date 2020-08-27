@@ -72,6 +72,7 @@ type Handle struct {
 	QuadStore
 	QuadWriter
 	Listener
+	Searcher
 }
 
 type IgnoreOpts struct {
@@ -82,6 +83,9 @@ func (h *Handle) Close() error {
 	err := h.QuadWriter.Close()
 	if h.Listener != nil {
 		h.Listener.Stop()
+	}
+	if h.Searcher != nil {
+		h.Searcher.Close()
 	}
 	h.QuadStore.Close()
 	return err

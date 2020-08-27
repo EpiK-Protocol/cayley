@@ -109,6 +109,8 @@ type QuadStore interface {
 	// Close the quad store and clean up. (Flush to disk, cleanly
 	// sever connections, etc)
 	Close() error
+
+	SyncToSearcher(context.Context, Searcher)
 }
 
 type Options map[string]interface{}
@@ -150,6 +152,23 @@ func (d Options) BoolKey(key string, def bool) (bool, error) {
 		return def, fmt.Errorf("Invalid %s parameter type from config: %T", key, val)
 	}
 
+	return def, nil
+}
+
+func (d Options) StringSliceKey(key string, def []string) ([]string, error) {
+	if val, ok := d[key]; ok {
+		if si, ok := val.([]interface{}); ok {
+			var slice []string
+			for _, i := range si {
+				if s, ok := i.(string); !ok {
+					return def, fmt.Errorf("Invalid %s parameter type from config: %T", key, i)
+				} else {
+					slice = append(slice, s)
+				}
+			}
+			return slice, nil
+		}
+	}
 	return def, nil
 }
 

@@ -86,7 +86,7 @@ type ResponseWriter interface {
 // Language is a description of query language.
 type Language struct {
 	Name    string
-	Session func(graph.QuadStore) Session
+	Session func(graph.QuadStore, graph.Searcher) Session
 
 	// Custom HTTP handlers
 
@@ -103,9 +103,9 @@ func RegisterLanguage(lang Language) {
 
 // NewSession creates a new session for specified query language.
 // It returns nil if language was not registered.
-func NewSession(qs graph.QuadStore, lang string) Session {
+func NewSession(qs graph.QuadStore, ns graph.Searcher, lang string) Session {
 	if l := languages[lang]; l.Session != nil {
-		return l.Session(qs)
+		return l.Session(qs, ns)
 	}
 	return nil
 }
@@ -131,11 +131,11 @@ func Languages() []string {
 
 // Execute runs the query in a given language and returns an iterator over the results.
 // Type of results depends on Collation. See Options for details.
-func Execute(ctx context.Context, qs graph.QuadStore, lang, query string, opt Options) (Iterator, error) {
+func Execute(ctx context.Context, h *graph.Handle, lang, query string, opt Options) (Iterator, error) {
 	l := GetLanguage(lang)
 	if l == nil {
 		return nil, fmt.Errorf("unsupported language: %q", lang)
 	}
-	sess := l.Session(qs)
+	sess := l.Session(h.QuadStore, h.Searcher)
 	return sess.Execute(ctx, query, opt)
 }

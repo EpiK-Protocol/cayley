@@ -108,7 +108,7 @@ func (api *API) ServeV1Query(w http.ResponseWriter, r *http.Request, params http
 		limit = 100
 	}
 
-	ses := l.Session(h.QuadStore)
+	ses := l.Session(h.QuadStore, h.Searcher)
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errFunc(w, err)
